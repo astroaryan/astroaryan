@@ -1,3 +1,16 @@
 li:nth-child(even) {
     list-style-type: none;
 }
+
+footer{
+    text-align:center;
+
+}
+
+#connectwithme{
+    margin-top:-10px;
+}
+#socialmediahandles{
+    margin-top:-10px;
+
+}
