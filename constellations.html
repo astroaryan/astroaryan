@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- FUTURE UPDATES: ENABLE HINTS IN THE FUTURE, HITNS INCLUDE MONTH AND THE SIGN ITSELF, ALSO MAKE IT SO THAT THE SAME CONSTELLATION ISN"T REPEATED IN A SERIES OF 12 QUESTIONS -->
+
+<!-- meta data -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Learn the Constellations</title>
+    <link rel="stylesheet" href="style1.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+  </head>
+<!-- header / table  -->
+  <div class="header1"> 
+    <table class="header1"> 
+      <tr> 
+        <td > <a href="deepsky.html"> Deep Sky Objects</a> </td>
+        <td color="black"> <a href="constellations.html"> Learn the Constellations</a> </td>
+        <td><a href="index.html"> Astronomy Resources</a> </td>
+        <td><a href="about.html"> About</a> </td>
+
+      </tr>
+    </table>
+  </div>
+
+<body>
+  <section id="backgroundinformationtable"> 
+<!-- this handles the background information table --> 
+<div class="constellationtext" style="border:4px solid rgb(255, 255, 255);"> 
+  <br>
+    <h3 class="constellationtext1"> 
+      Are you an ancient farmer, sailor, or priest? If so, you're probably 
+      more familiar with constellations than anyone else in our modern era.
+    </h3>
+    <h5 class="constellationtext1"> 
+      Constellations are star groups that form a specific pattern in the sky. 
+      Although they vary over millenia (since each star has its own velocity), 
+      they've historically helped humans navigate nature 
+      and share their various beliefs, experiences, and mythologies. 
+      Today, we frequently recognize the Western Zodiac constellations,
+      but other cultures have also pioneered this important field of astronomy.
+      By studying the constellations, you'll benefit by better understanding our shared history, cultures, and our local universe.
+    </h5> 
+    <h5 class="constellationtext1"> 
+      To me, the night sky is free and entertaining -- it's one of the few things that won't change in our tumultous world. 
+      I hope this quiz helps you learn the constellations, and if interested, scroll down to read more about our cosmos.
+    </h5>
+
+    <h5 class="constellationtext1"> *Mobile support is coming soon, thank you for your patience!*</h5>
+  <br>
+</div >
+</section>
+
+<!-- this handles the quiz interface--> 
+<section id="quizinterface"> 
+<!-- this handles the quiz interface--> 
+<!-- constellation game before click--> 
+<div id="fontforconstellationgame" style="border:6px dotted rgb(255, 255, 255);"> 
+  <br>
+    <h1 id="headingforconstellationgame1" class="headingforconstellatiomgame"> Constellation Quizzes</h1>
+    <h3 id="clickbelow" class="marginbottomfooter headingforconstellatiomgame"> Click below! </h3>
+    <div id="resultstab" style="display: none">
+    <p id="results1"> </p>
+    <p id="results2"> Click to play again!</p>
+    </div>
+
+<!-- quiz start--> 
+<div>
+
+<div id="disappear1">
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+<table id="constellationAstart" class="borderremoval outsidetable">
+  <tr class="borderremoval insidetable">
+    <td id="zeasy1" class="constellationfont zeasy borderremoval"> Zodiac Easy</td>
+    <td id="zhard1" class="constellationfont zhard borderremoval"> Zodiac Hard</td>
+    <td id="zeightyeight1" class="constellationfont zeightyeight borderremoval"> 88 Constellations</td>
+  </tr>
+
+</table>
+<div id="disappear">
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+</div>
+<!-- quiz start--> 
+
+<div id="quiz" style="display: none"> 
+  <br>
+  <br>
+
+  <div class="container"> 
+  <img id='constellationimage1'class='left' src="constellations/virgo.png" alt="Constellation Source">
+  <div class='right'>
+  <h6 >Which constellation is in the image?</h6>
+  <br>
+  <table id="answeroptions">
+    <tr>
+      <td id="answeroption1" class="answeroptions3" onclick="checkAnswer('A')">Answer 1</td>
+      <td id="answeroption2" class="answeroptions3" onclick="checkAnswer('B')">Answer 2</td>
+    </tr>
+    <tr>
+      <td id="answeroption3" class="answeroptions3" onclick="checkAnswer('C')">Answer 3 </td>
+      <td id="answeroption4" class="answeroptions3" onclick="checkAnswer('D')">Answer 4</td>
+    </tr>
+  </table>
+
+  <h6 id="scorecard"> Score: Nothing yet! </h6>
+  </div>
+  </div>
+
+  <br>
+  <br>
+  <table id="restart" >
+    <tr id="restart1">
+      <td id="restart2" class="restart3"> Restart </td>
+    </tr>
+  </table>
+  <br>
+
+</div>
+
+</div>
+</div>
+<!-- constellation game before click--> 
+</section>
+
+
+<!-- footer -->
+  <div>
+    <footer>
+      <h4> Hi, I'm Aryan. I'm a Sagittarius!</h4>
+      <h4 id="connectwithme">Connect with me! </h4>
+      <h4 id="socialmediahandles">
+         <a href="https://www.linkedin.com/in/aryan-gupta448/" target="_blank"><img src="images/linkedin.png" width="44px" alt="My LinkedIn Account" /></a>
+         <a href="https://www.instagram.com/ard.zzle/?hl=en" target="_blank"><img src="images/instagram.png" width="44px" alt="My Instagram Account" /></a>
+         <a href="mailto:aryan2026gupta@gmail.com" target="_blank"><img src="images/gmail.png" width="50px" alt="Email me"/> </a>
+
+      </h4>
+     </footer>
+
+</div>
+<!-- footer -->
+
+<script src="script.js"></script>
+</body>
+</html>
