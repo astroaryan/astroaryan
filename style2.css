@@ -21,6 +21,8 @@ table{
     margin-right: 50px;
     font-size: 1.38em;
     line-height: 1.3em;
+    min-width: 600px;
+
 }
 
 html{
