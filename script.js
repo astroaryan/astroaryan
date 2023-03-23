@@ -103,7 +103,7 @@ function checkAnswer(answer){
         if (scorecounter==1){
         document.getElementById('results1').innerHTML = 'Nice try. You scored ' + scorecounter + ' point. Maybe you should study...';
         }
-        else (scorecounter>=9){
+        else if (scorecounter>=9){
         document.getElementById('results1').innerHTML = 'Excellent! You scored ' + scorecounter + ' points. You must be an astronomer!';
         }
         else if (scorecounter>=6){
@@ -114,9 +114,6 @@ function checkAnswer(answer){
         }else{
             document.getElementById('results1').innerHTML = 'Nice try. You scored ' + scorecounter + ' points. Maybe you should study...';
         }
-
-
-
     } else{render();}
 }
 
