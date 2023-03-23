@@ -100,7 +100,10 @@ function checkAnswer(answer){
         disappear1.style.display = "revert"
         quiz.style.display = "none";
         resultstab.style.display = "block";
-        if (scorecounter>=9){
+        if (scorecounter==1){
+        document.getElementById('results1').innerHTML = 'Nice try. You scored ' + scorecounter + ' point. Maybe you should study...';
+        }
+        else (scorecounter>=9){
         document.getElementById('results1').innerHTML = 'Excellent! You scored ' + scorecounter + ' points. You must be an astronomer!';
         }
         else if (scorecounter>=6){
