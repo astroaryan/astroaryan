@@ -41,27 +41,27 @@ function render(){
 
     document.getElementById('constellationimage1').src = images[integer]; //this is the image we display, so it's the correct answer
     //these if statements determine which of our answer choices will be our right answer, so there's a lot of randomization
-    if (correctanswer = 0){ 
+    if (correctanswer == 0){ 
         document.getElementById('answeroption1').innerHTML = possibleAnswers[integer];
         document.getElementById('answeroption2').innerHTML = possibleAnswers[a];
         document.getElementById('answeroption3').innerHTML = possibleAnswers[b];
         document.getElementById('answeroption4').innerHTML = possibleAnswers[c];
     }
-    if (correctanswer = 1){
+    if (correctanswer == 1){
         document.getElementById('answeroption2').innerHTML = possibleAnswers[integer];
         document.getElementById('answeroption1').innerHTML = possibleAnswers[a];
         document.getElementById('answeroption3').innerHTML = possibleAnswers[b];
         document.getElementById('answeroption4').innerHTML = possibleAnswers[c];
     }
 
-    if (correctanswer = 2){
+    if (correctanswer == 2){
         document.getElementById('answeroption3').innerHTML = possibleAnswers[integer];
         document.getElementById('answeroption1').innerHTML = possibleAnswers[a];
         document.getElementById('answeroption2').innerHTML = possibleAnswers[b];
         document.getElementById('answeroption4').innerHTML = possibleAnswers[c];
     }
 
-    if (correctanswer = 3){
+    if (correctanswer == 3){
         document.getElementById('answeroption4').innerHTML = possibleAnswers[integer];
         document.getElementById('answeroption1').innerHTML = possibleAnswers[a];
         document.getElementById('answeroption2').innerHTML = possibleAnswers[b];
