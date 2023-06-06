@@ -6,7 +6,7 @@ html{
     background-image: url('images/stars.png')
 }
 
-.dogs{
+.mydogs{
   display: flex;
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
