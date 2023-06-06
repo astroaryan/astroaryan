@@ -7,10 +7,9 @@ html{
 }
 
 .mydogs{
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  width: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
 }
 
 #blahblahblah{
