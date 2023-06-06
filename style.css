@@ -10,7 +10,7 @@ html{
   display: flex;
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
-  height: 300px;
+  width: 300px;
 }
 
 #blahblahblah{
