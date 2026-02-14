@@ -96,6 +96,11 @@ footer:hover{
     font-size: 1.25rem
 }
 
+.hello {
+  list-style-type: none;
+}
+
+
 .about{
 margin-left: 50px
 }
