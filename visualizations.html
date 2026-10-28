@@ -9,11 +9,7 @@
     <link rel="stylesheet" href="visualizations/visualizations.css">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
     <script src="variables.js" defer></script>
-    <script src="visualizations/colormaps.js" defer></script>
-    <script src="visualizations/physics.js" defer></script>
-    <script src="visualizations/controls.js" defer></script>
-    <script src="visualizations/planet-equilibrium-temperature.js" defer></script>
-    <script src="visualizations/blackbody.js" defer></script>
+    <script src="visualizations/visualizations.js" defer></script>
   </head>
 <body>
   <div class="header1">
@@ -28,61 +24,642 @@
     </table>
   </div>
 
+  <section class="constellationtext visualizations-intro" aria-label="About the visualization tools">
+    <p>Here are some visualization tools I've used throughout research to get a better intuition for the physics and data that I'm working with!</p>
+    <p>Feel free to use the sliders to play around with these visualizations.</p>
+    <p>For context, when I was studying brown dwarfs, I wanted to know how much more stellar irradiation there was at perihelion (closest approach) versus aphelion, so this tool helped me a lot!</p>
+  </section>
+
   <main id="fontforconstellationgame" class="visualizations-panel" aria-labelledby="visualizations-heading">
     <h1 id="visualizations-heading" class="headingforconstellatiomgame">Visualizations</h1>
     <noscript><p>Enable JavaScript to use the interactive diagrams and controls.</p></noscript>
 
     <section id="planet-equilibrium" class="visualization" aria-labelledby="planet-heading">
       <h2 id="planet-heading">Planet equilibrium temperature</h2>
-      <p class="viz-intro">How warm is a planet? Change its star, orbit, and reflectivity to explore.</p>
-      <div class="mode-controls" role="group" aria-label="Orbit type">
-        <button type="button" data-orbit="circular" aria-pressed="true">Circular orbit</button>
-        <button type="button" data-orbit="eccentric" aria-pressed="false">Eccentric orbit</button>
-      </div>
-      <div class="viz-layout">
-        <div class="viz-controls" id="planet-controls" aria-label="Planet parameters"></div>
-        <div class="viz-display">
-          <h3 id="planet-result" class="viz-result"></h3>
-          <p id="planet-star-summary" class="viz-summary"></p>
-          <svg id="planet-diagram" class="planet-diagram" viewBox="0 0 550 440" role="group" aria-labelledby="planet-svg-title planet-svg-description">
-            <title id="planet-svg-title">Planet equilibrium temperature diagram</title>
-            <desc id="planet-svg-description">A representative star and orbit. Drag the planet or use the labelled sliders to change the system.</desc>
-          </svg>
-          <p id="planet-parameters" class="viz-summary"></p>
-          <p id="planet-status" class="viz-status" role="status"></p>
-          <p id="planet-help" class="viz-help">Drag the planet left or right to change its distance. You can also use the sliders or enter exact values.</p>
+      <div class="viz-layout planet-layout">
+        <div class="viz-controls">
+          <div id="planet-controls" aria-label="Planet parameters"></div>
           <div class="viz-actions">
-            <button type="button" id="planet-play" aria-pressed="false" hidden>Play orbit</button>
             <button type="button" id="planet-reset">Reset planet</button>
+            <button type="button" id="planet-play" aria-pressed="false">Play orbit</button>
           </div>
-          <p id="planet-playback-note" class="viz-help" hidden>Playback: 12 seconds per orbit, with Keplerian relative speed. Time is illustrative.</p>
+        </div>
+        <div class="viz-content">
+          <div class="plot-panel planet-plot">
+            <svg id="planet-diagram" class="planet-diagram" viewBox="0 0 800 515" role="group" aria-labelledby="planet-svg-title planet-svg-description">
+              <title id="planet-svg-title">Planet equilibrium temperature diagram</title>
+              <desc id="planet-svg-description">Drag the planet around its orbit or use the controls to change the system. Set eccentricity to zero for a circular orbit.</desc>
+            </svg>
+          </div>
+          <aside id="planet-results" class="results-panel" aria-label="Calculated results">
+            <h3 id="planet-result" class="viz-result"></h3>
+            <dl class="derived-values">
+              <div><dt>Current distance</dt><dd id="planet-current-distance"></dd></div>
+              <div><dt>Perihelion</dt><dd id="planet-perihelion"></dd></div>
+              <div><dt>Aphelion</dt><dd id="planet-aphelion"></dd></div>
+            </dl>
+            <p id="planet-status" class="viz-status" role="status" hidden></p>
+            <div class="equation-panel">
+              <!-- Typeset from TeX math notation with Matplotlib MathText; vector paths keep the page self-contained. -->
+              <svg class="equilibrium-equation" role="img" aria-labelledby="equilibrium-equation-title" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 238 37" xmlns="http://www.w3.org/2000/svg" version="1.1"><title id="equilibrium-equation-title">T equilibrium equals T star times the square root of R star over twice r, times one minus Bond albedo to the one-quarter power.</title>
+ 
+ <defs>
+  
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 37 
+L 238 37 
+L 238 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="text_1">
+   <!-- $T_{\mathrm{eq}} = T_\star\sqrt{\frac{R_\star}{2r}}\,(1-A_{\mathrm{B}})^{1/4}$ -->
+   <g transform="translate(0 29) scale(0.2 -0.2)">
+    <defs>
+     <path id="DejaVuSerif-Italic-54" d="M 769 0 
+L 831 331 
+L 1428 331 
+L 2200 4294 
+L 828 4294 
+L 688 3566 
+L 303 3566 
+L 516 4666 
+L 4659 4666 
+L 4447 3566 
+L 4063 3566 
+L 4203 4294 
+L 2831 4294 
+L 2059 331 
+L 2656 331 
+L 2594 0 
+L 769 0 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-65" d="M 3469 1600 
+L 991 1600 
+L 991 1575 
+Q 991 903 1244 561 
+Q 1497 219 1991 219 
+Q 2369 219 2611 417 
+Q 2853 616 2950 1006 
+L 3413 1006 
+Q 3275 459 2904 184 
+Q 2534 -91 1931 -91 
+Q 1203 -91 761 389 
+Q 319 869 319 1663 
+Q 319 2450 753 2931 
+Q 1188 3413 1894 3413 
+Q 2647 3413 3050 2948 
+Q 3453 2484 3469 1600 
+z
+M 2791 1931 
+Q 2772 2513 2545 2808 
+Q 2319 3103 1894 3103 
+Q 1497 3103 1269 2806 
+Q 1041 2509 991 1931 
+L 2791 1931 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-71" d="M 3359 2988 
+L 3359 -997 
+L 3909 -997 
+L 3909 -1331 
+L 2241 -1331 
+L 2241 -997 
+L 2784 -997 
+L 2784 519 
+Q 2616 206 2355 57 
+Q 2094 -91 1709 -91 
+Q 1097 -91 708 395 
+Q 319 881 319 1663 
+Q 319 2444 706 2928 
+Q 1094 3413 1709 3413 
+Q 2094 3413 2355 3264 
+Q 2616 3116 2784 2803 
+L 2784 3322 
+L 3909 3322 
+L 3909 2988 
+L 3359 2988 
+z
+M 2784 1825 
+Q 2784 2422 2554 2737 
+Q 2325 3053 1888 3053 
+Q 1444 3053 1217 2703 
+Q 991 2353 991 1663 
+Q 991 975 1217 622 
+Q 1444 269 1888 269 
+Q 2325 269 2554 583 
+Q 2784 897 2784 1497 
+L 2784 1825 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-3d" d="M 678 2894 
+L 4684 2894 
+L 4684 2394 
+L 678 2394 
+L 678 2894 
+z
+M 678 1619 
+L 4684 1619 
+L 4684 1119 
+L 678 1119 
+L 678 1619 
+z
+" transform="scale(0.015625)"/>
+     <path id="STIXGeneral-Regular-22c6" d="M 4256 2336 
+L 2810 1459 
+L 3494 -83 
+L 2240 1062 
+L 986 -83 
+L 1670 1459 
+L 224 2336 
+L 1901 2144 
+L 2240 3821 
+L 2579 2144 
+L 4256 2336 
+z
+" transform="scale(0.015625)"/>
+     <path id="STIXSizeOneSym-Regular-221a" d="M 6970 9933 
+L 3373 -1888 
+L 3104 -1888 
+L 1626 2918 
+Q 1555 3149 1465 3251 
+Q 1376 3354 1229 3354 
+Q 1011 3354 794 3181 
+L 717 3309 
+L 1766 4115 
+L 1926 4115 
+L 3379 -602 
+L 3405 -602 
+L 6605 9933 
+L 6970 9933 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-Italic-52" d="M 3066 2316 
+Q 3272 2256 3403 2114 
+Q 3534 1972 3609 1716 
+L 4016 331 
+L 4584 331 
+L 4522 0 
+L 3422 0 
+L 2981 1484 
+Q 2856 1916 2706 2042 
+Q 2556 2169 2250 2169 
+L 1553 2169 
+L 1194 331 
+L 1853 331 
+L 1791 0 
+L -97 0 
+L -34 331 
+L 559 331 
+L 1338 4331 
+L 744 4331 
+L 809 4666 
+L 3175 4666 
+Q 3856 4666 4164 4341 
+Q 4472 4016 4356 3419 
+Q 4263 2938 3938 2661 
+Q 3613 2384 3066 2316 
+z
+M 1619 2503 
+L 2541 2503 
+Q 3013 2503 3280 2726 
+Q 3547 2950 3639 3419 
+Q 3731 3888 3548 4109 
+Q 3366 4331 2894 4331 
+L 1972 4331 
+L 1619 2503 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-32" d="M 819 3553 
+L 469 3553 
+L 469 4384 
+Q 803 4563 1142 4656 
+Q 1481 4750 1806 4750 
+Q 2534 4750 2956 4397 
+Q 3378 4044 3378 3438 
+Q 3378 2753 2422 1800 
+Q 2347 1728 2309 1691 
+L 1131 513 
+L 3078 513 
+L 3078 1088 
+L 3444 1088 
+L 3444 0 
+L 434 0 
+L 434 341 
+L 1850 1753 
+Q 2319 2222 2519 2614 
+Q 2719 3006 2719 3438 
+Q 2719 3909 2473 4175 
+Q 2228 4441 1797 4441 
+Q 1350 4441 1106 4219 
+Q 863 3997 819 3553 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-Italic-72" d="M 3375 3328 
+L 3213 2497 
+L 2881 2497 
+Q 2891 2559 2891 2613 
+Q 2891 2775 2816 2866 
+Q 2719 2988 2484 2988 
+Q 2059 2988 1775 2694 
+Q 1491 2400 1384 1850 
+L 1025 0 
+L 450 0 
+L 1031 2994 
+L 481 2994 
+L 544 3322 
+L 1669 3322 
+L 1556 2731 
+Q 1791 3078 2089 3245 
+Q 2388 3413 2769 3413 
+Q 2909 3413 3059 3391 
+Q 3209 3369 3375 3328 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-28" d="M 2041 -997 
+Q 1281 -656 893 83 
+Q 506 822 506 1931 
+Q 506 3044 893 3783 
+Q 1281 4522 2041 4863 
+L 2041 4556 
+Q 1559 4225 1350 3623 
+Q 1141 3022 1141 1931 
+Q 1141 844 1350 242 
+Q 1559 -359 2041 -691 
+L 2041 -997 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-31" d="M 909 0 
+L 909 331 
+L 1722 331 
+L 1722 4213 
+L 781 3603 
+L 781 4013 
+L 1919 4750 
+L 2350 4750 
+L 2350 331 
+L 3163 331 
+L 3163 0 
+L 909 0 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-2212" d="M 678 2259 
+L 4684 2259 
+L 4684 1753 
+L 678 1753 
+L 678 2259 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-Italic-41" d="M 1159 1691 
+L 2872 1691 
+L 2447 3909 
+L 1159 1691 
+z
+M -488 0 
+L -425 331 
+L -16 331 
+L 2491 4666 
+L 3016 4666 
+L 3841 331 
+L 4297 331 
+L 4234 0 
+L 2538 0 
+L 2600 331 
+L 3119 331 
+L 2928 1356 
+L 966 1356 
+L 375 331 
+L 888 331 
+L 825 0 
+L -488 0 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-42" d="M 1581 331 
+L 2516 331 
+Q 3078 331 3337 575 
+Q 3597 819 3597 1350 
+Q 3597 1878 3339 2120 
+Q 3081 2363 2516 2363 
+L 1581 2363 
+L 1581 331 
+z
+M 1581 2694 
+L 2375 2694 
+Q 2888 2694 3123 2891 
+Q 3359 3088 3359 3513 
+Q 3359 3941 3123 4136 
+Q 2888 4331 2375 4331 
+L 1581 4331 
+L 1581 2694 
+z
+M 353 0 
+L 353 331 
+L 947 331 
+L 947 4331 
+L 353 4331 
+L 353 4666 
+L 2656 4666 
+Q 3363 4666 3720 4377 
+Q 4078 4088 4078 3513 
+Q 4078 3097 3829 2850 
+Q 3581 2603 3103 2547 
+Q 3697 2472 4005 2167 
+Q 4313 1863 4313 1350 
+Q 4313 656 3875 328 
+Q 3438 0 2509 0 
+L 353 0 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-29" d="M 453 -997 
+L 453 -691 
+Q 934 -359 1145 242 
+Q 1356 844 1356 1931 
+Q 1356 3022 1145 3623 
+Q 934 4225 453 4556 
+L 453 4863 
+Q 1216 4522 1603 3783 
+Q 1991 3044 1991 1931 
+Q 1991 822 1603 83 
+Q 1216 -656 453 -997 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-2f" d="M 1656 4666 
+L 2156 4666 
+L 500 -594 
+L 0 -594 
+L 1656 4666 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSerif-34" d="M 2234 1581 
+L 2234 4063 
+L 641 1581 
+L 2234 1581 
+z
+M 3609 0 
+L 1484 0 
+L 1484 331 
+L 2234 331 
+L 2234 1247 
+L 197 1247 
+L 197 1588 
+L 2241 4750 
+L 2859 4750 
+L 2859 1581 
+L 3750 1581 
+L 3750 1247 
+L 2859 1247 
+L 2859 331 
+L 3609 331 
+L 3609 0 
+z
+" transform="scale(0.015625)"/>
+    </defs>
+    <use xlink:href="#DejaVuSerif-Italic-54" transform="translate(0 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-65" transform="translate(66.699219 -15.204688) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-71" transform="translate(108.125 -15.204688) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-3d" transform="translate(174.494727 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-Italic-54" transform="translate(277.248633 0.367188)"/>
+    <use xlink:href="#STIXGeneral-Regular-22c6" transform="translate(357.223242 -15.204688) scale(0.7)"/>
+    <use xlink:href="#STIXSizeOneSym-Regular-221a" transform="translate(422.093935 -10.71875) scale(0.958421)"/>
+    <use xlink:href="#DejaVuSerif-Italic-52" transform="translate(535.884248 55.715625) scale(0.7)"/>
+    <use xlink:href="#STIXGeneral-Regular-22c6" transform="translate(597.8821 44.815313) scale(0.49)"/>
+    <use xlink:href="#DejaVuSerif-32" transform="translate(550.884248 -39.023281) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-Italic-72" transform="translate(595.420381 -39.023281) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-28" transform="translate(684.095937 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-31" transform="translate(723.109609 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-2212" transform="translate(805.6975 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-Italic-41" transform="translate(908.451406 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-42" transform="translate(980.668203 -15.204688) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-29" transform="translate(1034.703945 0.367188)"/>
+    <use xlink:href="#DejaVuSerif-31" transform="translate(1074.625976 36.701562) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-2f" transform="translate(1119.162109 36.701562) scale(0.7)"/>
+    <use xlink:href="#DejaVuSerif-34" transform="translate(1142.746093 36.701562) scale(0.7)"/>
+    <path d="M 523.384248 131.5 
+L 523.384248 137.75 
+L 668.291585 137.75 
+L 668.291585 131.5 
+L 523.384248 131.5 
+z
+"/>
+    <path d="M 535.884248 19.179844 
+L 535.884248 25.429844 
+L 643.291585 25.429844 
+L 643.291585 19.179844 
+L 535.884248 19.179844 
+z
+"/>
+   </g>
+  </g>
+ </g>
+</svg>
+            </div>
+            <p id="planet-help" class="viz-help">Drag the planet around its orbit to change true anomaly.</p>
+          </aside>
         </div>
       </div>
-      <p class="viz-equation">T<sub>eq</sub> = T<sub>★</sub> √(R<sub>★</sub> / 2r) (1 − A<sub>B</sub>)<sup>¼</sup></p>
-      <p class="viz-help">Zero internal heating · uniform heat redistribution · no greenhouse effect or thermal lag. Drawing sizes are representative; orbital spacing is logarithmically compressed.</p>
     </section>
 
     <section id="blackbody" class="visualization" aria-labelledby="blackbody-heading">
       <h2 id="blackbody-heading">Blackbody spectrum</h2>
-      <p class="viz-intro">Explore the surface spectral flux of a blackbody as its temperature changes.</p>
       <div class="viz-layout">
         <div class="viz-controls">
           <div id="blackbody-controls"></div>
           <button type="button" id="blackbody-reset">Reset spectrum</button>
-          <p class="viz-help">Adjust the slider or enter an exact temperature. The wavelength and flux axes rescale with temperature.</p>
         </div>
-        <div class="viz-display">
-          <h3 id="blackbody-result" class="viz-result"></h3>
-          <svg id="blackbody-diagram" class="blackbody-diagram" viewBox="0 0 800 500" role="img" aria-labelledby="blackbody-svg-title blackbody-svg-description">
-            <title id="blackbody-svg-title">Blackbody surface spectral flux</title>
-            <desc id="blackbody-svg-description">Planck's law, with wavelength in micrometres and surface spectral flux in watts per square metre per micrometre.</desc>
-          </svg>
-          <p id="blackbody-peak" class="viz-summary" role="status"></p>
-          <p class="viz-help">Surface spectral flux F<sub>λ</sub> [W m<sup>−2</sup> μm<sup>−1</sup>]</p>
+        <div class="viz-content">
+          <div class="plot-panel blackbody-plot">
+            <h3 id="blackbody-result" class="viz-result"></h3>
+            <svg id="blackbody-diagram" class="blackbody-diagram" viewBox="0 0 800 500" role="img" aria-labelledby="blackbody-svg-title blackbody-svg-description">
+              <title id="blackbody-svg-title">Blackbody spectral luminosity</title>
+              <desc id="blackbody-svg-description">Planck's law for a sphere, with wavelength in micrometres and spectral luminosity in solar luminosities per micrometre.</desc>
+            </svg>
+          </div>
+          <aside id="blackbody-results" class="results-panel" aria-label="Calculated spectrum results">
+            <h3 class="viz-result">Total luminosity</h3>
+            <p id="blackbody-luminosity" class="derived-result" role="status"></p>
+            <dl class="derived-values"><div><dt>Peak wavelength</dt><dd id="blackbody-peak"></dd></div></dl>
+            <div class="equation-panel">
+              <h4 class="equation-label">Stefan–Boltzmann law</h4>
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 160 19" version="1.1" class="stefan-equation" role="img" aria-labelledby="stefan-equation-title">
+ <title id="stefan-equation-title">Stefan–Boltzmann law: total luminosity L equals 4 pi R squared times sigma T to the fourth power.</title><defs>
+  </defs>
+ <g id="stefan-figure_1">
+  <g id="stefan-patch_1">
+   <path d="M 0 19  L 128 19  L 128 0  L 0 0  z " style="fill: #ffffff" />
+  </g>
+  <g id="stefan-text_1">
+   
+   <g transform="translate(0 18) scale(0.2 -0.2)">
+    <defs>
+     <path id="stefan-DejaVuSerif-Italic-4c" d="M -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 2631 4666  L 2566 4331  L 1972 4331  L 1206 384  L 3338 384  L 3488 1166  L 3872 1166  L 3647 0  L -97 0  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-3d" d="M 678 2894  L 4684 2894  L 4684 2394  L 678 2394  L 678 2894  z M 678 1619  L 4684 1619  L 4684 1119  L 678 1119  L 678 1619  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-34" d="M 2234 1581  L 2234 4063  L 641 1581  L 2234 1581  z M 3609 0  L 1484 0  L 1484 331  L 2234 331  L 2234 1247  L 197 1247  L 197 1588  L 2241 4750  L 2859 4750  L 2859 1581  L 3750 1581  L 3750 1247  L 2859 1247  L 2859 331  L 3609 331  L 3609 0  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-Italic-3c0" d="M -56 0  L 6 331  L 525 331  L 1044 2988  L 494 2988  L 556 3322  L 4300 3322  L 4238 2988  L 3694 2988  L 3175 331  L 3688 331  L 3625 0  L 2038 0  L 2100 331  L 2597 331  L 3116 2988  L 1619 2988  L 1100 331  L 1600 331  L 1538 0  L -56 0  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-Italic-52" d="M 3066 2316  Q 3272 2256 3403 2114  Q 3534 1972 3609 1716  L 4016 331  L 4584 331  L 4522 0  L 3422 0  L 2981 1484  Q 2856 1916 2706 2042  Q 2556 2169 2250 2169  L 1553 2169  L 1194 331  L 1853 331  L 1791 0  L -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 3175 4666  Q 3856 4666 4164 4341  Q 4472 4016 4356 3419  Q 4263 2938 3938 2661  Q 3613 2384 3066 2316  z M 1619 2503  L 2541 2503  Q 3013 2503 3280 2726  Q 3547 2950 3639 3419  Q 3731 3888 3548 4109  Q 3366 4331 2894 4331  L 1972 4331  L 1619 2503  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-32" d="M 819 3553  L 469 3553  L 469 4384  Q 803 4563 1142 4656  Q 1481 4750 1806 4750  Q 2534 4750 2956 4397  Q 3378 4044 3378 3438  Q 3378 2753 2422 1800  Q 2347 1728 2309 1691  L 1131 513  L 3078 513  L 3078 1088  L 3444 1088  L 3444 0  L 434 0  L 434 341  L 1850 1753  Q 2319 2222 2519 2614  Q 2719 3006 2719 3438  Q 2719 3909 2473 4175  Q 2228 4441 1797 4441  Q 1350 4441 1106 4219  Q 863 3997 819 3553  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-Italic-3c3" d="M 1653 219  Q 2116 219 2423 584  Q 2731 950 2869 1663  Q 2994 2309 2834 2706  Q 2694 3044 2203 3047  Q 1725 3047 1438 2706  Q 1131 2341 1000 1663  Q 863 950 1028 584  Q 1194 219 1653 219  z M 2263 3322  Q 3538 3322 4513 3322  L 4447 2988  L 3303 2988  Q 3706 2509 3541 1663  Q 3388 869 2855 389  Q 2322 -91 1594 -91  Q 869 -91 522 389  Q 175 869 328 1662  Q 481 2456 1016 2934  Q 1447 3322 2263 3322  z " transform="scale(0.015625)" />
+     <path id="stefan-DejaVuSerif-Italic-54" d="M 769 0  L 831 331  L 1428 331  L 2200 4294  L 828 4294  L 688 3566  L 303 3566  L 516 4666  L 4659 4666  L 4447 3566  L 4063 3566  L 4203 4294  L 2831 4294  L 2059 331  L 2656 331  L 2594 0  L 769 0  z " transform="scale(0.015625)" />
+    </defs>
+    <use xlink:href="#stefan-DejaVuSerif-Italic-4c" transform="translate(0 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-3d" transform="translate(85.371094 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-34" transform="translate(188.125 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-Italic-3c0" transform="translate(251.748047 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-Italic-52" transform="translate(317.470703 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-32" transform="translate(399.942682 37.046875) scale(0.7)" />
+    <use xlink:href="#stefan-DejaVuSerif-Italic-3c3" transform="translate(447.074128 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-Italic-54" transform="translate(515.335846 0.7125)" />
+    <use xlink:href="#stefan-DejaVuSerif-34" transform="translate(589.214076 37.046875) scale(0.7)" />
+   </g>
+  </g>
+ </g>
+</svg>
+            </div>
+            <div class="equation-panel">
+              <h4 class="equation-label">Planck's law</h4>
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="planck-equation" role="img" aria-labelledby="planck-equation-title" viewBox="0 0 160.0 158.0"><title id="planck-equation-title">Planck’s law: B lambda of T equals 2 h c squared over lambda to the fifth, divided by e to the x minus 1; x equals h c over lambda k B T. Surface flux F lambda equals pi times B lambda. Spectral luminosity L lambda equals 4 pi R squared times F lambda.</title><g transform="translate(0 0)"><defs>
+  </defs>
+ <g id="planck-0-figure_1">
+  <g id="planck-0-patch_1">
+   <path d="M 0 32  L 160 32  L 160 0  L 0 0  z " style="fill: #ffffff" />
+  </g>
+  <g id="planck-0-text_1">
+   
+   <g transform="translate(0 22) scale(0.2 -0.2)">
+    <defs>
+     <path id="planck-0-DejaVuSerif-Italic-42" d="M 1194 331  L 2128 331  Q 2691 331 2998 575  Q 3306 819 3409 1350  Q 3513 1878 3302 2120  Q 3091 2363 2525 2363  L 1591 2363  L 1194 331  z M 1653 2694  L 2447 2694  Q 2959 2694 3234 2891  Q 3509 3088 3591 3513  Q 3675 3941 3476 4136  Q 3278 4331 2766 4331  L 1972 4331  L 1653 2694  z M -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 3113 4666  Q 3819 4666 4120 4377  Q 4422 4088 4309 3513  Q 4231 3097 3934 2850  Q 3638 2603 3147 2547  Q 3728 2472 3976 2167  Q 4225 1863 4125 1350  Q 3991 656 3489 328  Q 2988 0 2059 0  L -97 0  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-Italic-3bb" d="M 1984 4084  Q 1925 4372 1834 4466  Q 1744 4563 1578 4563  Q 1391 4563 1288 4472  Q 1178 4378 1119 4166  L 825 4166  L 947 4800  Q 1113 4847 1272 4872  Q 1431 4897 1578 4897  Q 1925 4897 2088 4753  Q 2253 4613 2334 4225  L 3100 334  L 3472 334  L 3406 0  L 2159 0  L 2225 334  L 2722 334  L 2281 2628  L 853 334  L 1384 334  L 1319 0  L -209 0  L -144 334  L 234 334  L 2116 3388  L 1984 4084  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-28" d="M 2041 -997  Q 1281 -656 893 83  Q 506 822 506 1931  Q 506 3044 893 3783  Q 1281 4522 2041 4863  L 2041 4556  Q 1559 4225 1350 3623  Q 1141 3022 1141 1931  Q 1141 844 1350 242  Q 1559 -359 2041 -691  L 2041 -997  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-Italic-54" d="M 769 0  L 831 331  L 1428 331  L 2200 4294  L 828 4294  L 688 3566  L 303 3566  L 516 4666  L 4659 4666  L 4447 3566  L 4063 3566  L 4203 4294  L 2831 4294  L 2059 331  L 2656 331  L 2594 0  L 769 0  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-29" d="M 453 -997  L 453 -691  Q 934 -359 1145 242  Q 1356 844 1356 1931  Q 1356 3022 1145 3623  Q 934 4225 453 4556  L 453 4863  Q 1216 4522 1603 3783  Q 1991 3044 1991 1931  Q 1991 822 1603 83  Q 1216 -656 453 -997  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-3d" d="M 678 2894  L 4684 2894  L 4684 2394  L 678 2394  L 678 2894  z M 678 1619  L 4684 1619  L 4684 1119  L 678 1119  L 678 1619  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-32" d="M 819 3553  L 469 3553  L 469 4384  Q 803 4563 1142 4656  Q 1481 4750 1806 4750  Q 2534 4750 2956 4397  Q 3378 4044 3378 3438  Q 3378 2753 2422 1800  Q 2347 1728 2309 1691  L 1131 513  L 3078 513  L 3078 1088  L 3444 1088  L 3444 0  L 434 0  L 434 341  L 1850 1753  Q 2319 2222 2519 2614  Q 2719 3006 2719 3438  Q 2719 3909 2473 4175  Q 2228 4441 1797 4441  Q 1350 4441 1106 4219  Q 863 3997 819 3553  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-Italic-68" d="M 309 0  L 1191 4531  L 641 4531  L 703 4863  L 1828 4863  L 1416 2731  Q 1641 3069 1928 3241  Q 2216 3413 2553 3413  Q 3103 3413 3300 3097  Q 3422 2906 3422 2588  Q 3422 2378 3369 2113  L 3022 331  L 3534 331  L 3472 0  L 2381 0  L 2756 1931  Q 2819 2253 2819 2469  Q 2819 2659 2769 2763  Q 2666 2988 2284 2988  Q 1884 2988 1617 2697  Q 1350 2406 1244 1850  L 884 0  L 309 0  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-Italic-63" d="M 3163 997  Q 2938 466 2536 187  Q 2134 -91 1584 -91  Q 859 -91 513 388  Q 272 722 272 1203  Q 272 1419 319 1663  Q 475 2459 1008 2936  Q 1541 3413 2266 3413  Q 2581 3413 2879 3339  Q 3178 3266 3463 3116  L 3300 2266  L 2966 2266  Q 2966 2309 2966 2347  Q 2966 2722 2803 2903  Q 2622 3103 2213 3103  Q 1747 3103 1439 2742  Q 1131 2381 991 1663  Q 928 1334 928 1078  Q 928 778 1016 581  Q 1181 219 1650 219  Q 2022 219 2281 412  Q 2541 606 2700 997  L 3163 997  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-35" d="M 3219 4666  L 3219 4153  L 1081 4153  L 1081 2816  Q 1244 2928 1461 2984  Q 1678 3041 1947 3041  Q 2703 3041 3140 2622  Q 3578 2203 3578 1478  Q 3578 738 3136 323  Q 2694 -91 1894 -91  Q 1572 -91 1234 -12  Q 897 66 544 225  L 544 1131  L 897 1131  Q 925 688 1179 453  Q 1434 219 1894 219  Q 2388 219 2653 544  Q 2919 869 2919 1478  Q 2919 2084 2655 2407  Q 2391 2731 1894 2731  Q 1613 2731 1398 2631  Q 1184 2531 1019 2322  L 750 2322  L 750 4666  L 3219 4666  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-31" d="M 909 0  L 909 331  L 1722 331  L 1722 4213  L 781 3603  L 781 4013  L 1919 4750  L 2350 4750  L 2350 331  L 3163 331  L 3163 0  L 909 0  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-Italic-65" d="M 938 1275  Q 925 1156 925 1050  Q 925 756 1031 563  Q 1216 219 1709 219  Q 2072 219 2250 328  Q 2569 525 2644 778  L 3066 778  Q 2941 381 2475 103  Q 2150 -91 1506 -91  Q 863 -91 516 388  Q 272 722 272 1206  Q 272 1419 319 1659  Q 472 2450 1000 2931  Q 1528 3413 2278 3413  Q 3500 3413 3500 2547  Q 3500 1913 2859 1603  Q 2206 1288 938 1275  z M 2541 1975  Q 2891 2181 2891 2569  Q 2891 3103 2181 3103  Q 1763 3103 1472 2784  Q 1181 2466 1003 1606  Q 2006 1653 2541 1975  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-Italic-78" d="M 409 0  L 19 0  L 1484 1594  L 747 2988  L 338 2988  L 400 3322  L 1244 3322  L 1934 2028  L 3125 3322  L 3516 3322  L 2078 1759  L 2838 331  L 3272 331  L 3209 0  L 2338 0  L 1631 1325  L 409 0  z " transform="scale(0.015625)" />
+     <path id="planck-0-DejaVuSerif-2212" d="M 678 2259  L 4684 2259  L 4684 1753  L 678 1753  L 678 2259  z " transform="scale(0.015625)" />
+    </defs>
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-42" transform="translate(0 0.351875)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-3bb" transform="translate(73.486328 -15.22) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-28" transform="translate(120.446875 0.351875)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-54" transform="translate(159.460547 0.351875)" />
+    <use xlink:href="#planck-0-DejaVuSerif-29" transform="translate(226.159766 0.351875)" />
+    <use xlink:href="#planck-0-DejaVuSerif-3d" transform="translate(284.138281 0.351875)" />
+    <use xlink:href="#planck-0-DejaVuSerif-32" transform="translate(386.892187 45.19875) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-68" transform="translate(431.42832 45.19875) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-63" transform="translate(476.511328 45.19875) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-32" transform="translate(518.822081 70.632812) scale(0.49)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-3bb" transform="translate(427.892187 -48.204687) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-35" transform="translate(477.636448 -22.770625) scale(0.49)" />
+    <use xlink:href="#planck-0-DejaVuSerif-31" transform="translate(660.118445 44.203438) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-65" transform="translate(580.118445 -38.999687) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-Italic-78" transform="translate(624.650877 -13.565625) scale(0.49)" />
+    <use xlink:href="#planck-0-DejaVuSerif-2212" transform="translate(667.377264 -38.999687) scale(0.7)" />
+    <use xlink:href="#planck-0-DejaVuSerif-31" transform="translate(739.304998 -38.999687) scale(0.7)" />
+    <path d="M 386.892187 19.203438  L 386.892187 25.453438  L 551.814092 25.453438  L 551.814092 19.203438  L 386.892187 19.203438  z " />
+    <path d="M 580.118445 19.203438  L 580.118445 25.453438  L 783.841131 25.453438  L 783.841131 19.203438  L 580.118445 19.203438  z " />
+   </g>
+  </g>
+ </g>
+</g><g transform="translate(0 50.0)"><defs>
+  </defs>
+ <g id="planck-1-figure_1">
+  <g id="planck-1-patch_1">
+   <path d="M 0 31  L 73 31  L 73 0  L 0 0  z " style="fill: #ffffff" />
+  </g>
+  <g id="planck-1-text_1">
+   
+   <g transform="translate(0 20) scale(0.2 -0.2)">
+    <defs>
+     <path id="planck-1-DejaVuSerif-Italic-78" d="M 409 0  L 19 0  L 1484 1594  L 747 2988  L 338 2988  L 400 3322  L 1244 3322  L 1934 2028  L 3125 3322  L 3516 3322  L 2078 1759  L 2838 331  L 3272 331  L 3209 0  L 2338 0  L 1631 1325  L 409 0  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-3d" d="M 678 2894  L 4684 2894  L 4684 2394  L 678 2394  L 678 2894  z M 678 1619  L 4684 1619  L 4684 1119  L 678 1119  L 678 1619  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-Italic-68" d="M 309 0  L 1191 4531  L 641 4531  L 703 4863  L 1828 4863  L 1416 2731  Q 1641 3069 1928 3241  Q 2216 3413 2553 3413  Q 3103 3413 3300 3097  Q 3422 2906 3422 2588  Q 3422 2378 3369 2113  L 3022 331  L 3534 331  L 3472 0  L 2381 0  L 2756 1931  Q 2819 2253 2819 2469  Q 2819 2659 2769 2763  Q 2666 2988 2284 2988  Q 1884 2988 1617 2697  Q 1350 2406 1244 1850  L 884 0  L 309 0  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-Italic-63" d="M 3163 997  Q 2938 466 2536 187  Q 2134 -91 1584 -91  Q 859 -91 513 388  Q 272 722 272 1203  Q 272 1419 319 1663  Q 475 2459 1008 2936  Q 1541 3413 2266 3413  Q 2581 3413 2879 3339  Q 3178 3266 3463 3116  L 3300 2266  L 2966 2266  Q 2966 2309 2966 2347  Q 2966 2722 2803 2903  Q 2622 3103 2213 3103  Q 1747 3103 1439 2742  Q 1131 2381 991 1663  Q 928 1334 928 1078  Q 928 778 1016 581  Q 1181 219 1650 219  Q 2022 219 2281 412  Q 2541 606 2700 997  L 3163 997  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-Italic-3bb" d="M 1984 4084  Q 1925 4372 1834 4466  Q 1744 4563 1578 4563  Q 1391 4563 1288 4472  Q 1178 4378 1119 4166  L 825 4166  L 947 4800  Q 1113 4847 1272 4872  Q 1431 4897 1578 4897  Q 1925 4897 2088 4753  Q 2253 4613 2334 4225  L 3100 334  L 3472 334  L 3406 0  L 2159 0  L 2225 334  L 2722 334  L 2281 2628  L 853 334  L 1384 334  L 1319 0  L -209 0  L -144 334  L 234 334  L 2116 3388  L 1984 4084  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-Italic-6b" d="M 2113 2075  L 3034 331  L 3513 331  L 3450 0  L 2528 0  L 1622 1697  L 1088 1275  L 841 0  L 266 0  L 1147 4531  L 594 4531  L 656 4863  L 1784 4863  L 1169 1697  L 2822 2988  L 2344 2988  L 2406 3322  L 3341 3322  L 3278 2988  L 2113 2075  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-42" d="M 1581 331  L 2516 331  Q 3078 331 3337 575  Q 3597 819 3597 1350  Q 3597 1878 3339 2120  Q 3081 2363 2516 2363  L 1581 2363  L 1581 331  z M 1581 2694  L 2375 2694  Q 2888 2694 3123 2891  Q 3359 3088 3359 3513  Q 3359 3941 3123 4136  Q 2888 4331 2375 4331  L 1581 4331  L 1581 2694  z M 353 0  L 353 331  L 947 331  L 947 4331  L 353 4331  L 353 4666  L 2656 4666  Q 3363 4666 3720 4377  Q 4078 4088 4078 3513  Q 4078 3097 3829 2850  Q 3581 2603 3103 2547  Q 3697 2472 4005 2167  Q 4313 1863 4313 1350  Q 4313 656 3875 328  Q 3438 0 2509 0  L 353 0  z " transform="scale(0.015625)" />
+     <path id="planck-1-DejaVuSerif-Italic-54" d="M 769 0  L 831 331  L 1428 331  L 2200 4294  L 828 4294  L 688 3566  L 303 3566  L 516 4666  L 4659 4666  L 4447 3566  L 4063 3566  L 4203 4294  L 2831 4294  L 2059 331  L 2656 331  L 2594 0  L 769 0  z " transform="scale(0.015625)" />
+    </defs>
+    <use xlink:href="#planck-1-DejaVuSerif-Italic-78" transform="translate(0 0.964063)" />
+    <use xlink:href="#planck-1-DejaVuSerif-3d" transform="translate(75.361328 0.964063)" />
+    <use xlink:href="#planck-1-DejaVuSerif-Italic-68" transform="translate(222.115234 45.810938) scale(0.7)" />
+    <use xlink:href="#planck-1-DejaVuSerif-Italic-63" transform="translate(267.198242 45.810938) scale(0.7)" />
+    <use xlink:href="#planck-1-DejaVuSerif-Italic-3bb" transform="translate(178.115234 -39.995312) scale(0.7)" />
+    <use xlink:href="#planck-1-DejaVuSerif-Italic-6b" transform="translate(222.480469 -39.995312) scale(0.7)" />
+    <use xlink:href="#planck-1-DejaVuSerif-42" transform="translate(264.897461 -50.895625) scale(0.49)" />
+    <use xlink:href="#planck-1-DejaVuSerif-Italic-54" transform="translate(302.72248 -39.995312) scale(0.7)" />
+    <path d="M 178.115234 19.815625  L 178.115234 26.065625  L 349.411934 26.065625  L 349.411934 19.815625  L 178.115234 19.815625  z " />
+   </g>
+  </g>
+ </g>
+</g><g transform="translate(0 99.0)"><defs>
+  </defs>
+ <g id="planck-2-figure_1">
+  <g id="planck-2-patch_1">
+   <path d="M 0 19  L 85 19  L 85 0  L 0 0  z " style="fill: #ffffff" />
+  </g>
+  <g id="planck-2-text_1">
+   
+   <g transform="translate(0 15) scale(0.2 -0.2)">
+    <defs>
+     <path id="planck-2-DejaVuSerif-Italic-46" d="M -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 4628 4666  L 4428 3628  L 4044 3628  L 4169 4281  L 1963 4281  L 1659 2719  L 3253 2719  L 3366 3303  L 3750 3303  L 3450 1753  L 3066 1753  L 3178 2338  L 1584 2338  L 1194 331  L 1941 331  L 1878 0  L -97 0  z " transform="scale(0.015625)" />
+     <path id="planck-2-DejaVuSerif-Italic-3bb" d="M 1984 4084  Q 1925 4372 1834 4466  Q 1744 4563 1578 4563  Q 1391 4563 1288 4472  Q 1178 4378 1119 4166  L 825 4166  L 947 4800  Q 1113 4847 1272 4872  Q 1431 4897 1578 4897  Q 1925 4897 2088 4753  Q 2253 4613 2334 4225  L 3100 334  L 3472 334  L 3406 0  L 2159 0  L 2225 334  L 2722 334  L 2281 2628  L 853 334  L 1384 334  L 1319 0  L -209 0  L -144 334  L 234 334  L 2116 3388  L 1984 4084  z " transform="scale(0.015625)" />
+     <path id="planck-2-DejaVuSerif-3d" d="M 678 2894  L 4684 2894  L 4684 2394  L 678 2394  L 678 2894  z M 678 1619  L 4684 1619  L 4684 1119  L 678 1119  L 678 1619  z " transform="scale(0.015625)" />
+     <path id="planck-2-DejaVuSerif-Italic-3c0" d="M -56 0  L 6 331  L 525 331  L 1044 2988  L 494 2988  L 556 3322  L 4300 3322  L 4238 2988  L 3694 2988  L 3175 331  L 3688 331  L 3625 0  L 2038 0  L 2100 331  L 2597 331  L 3116 2988  L 1619 2988  L 1100 331  L 1600 331  L 1538 0  L -56 0  z " transform="scale(0.015625)" />
+     <path id="planck-2-DejaVuSerif-Italic-42" d="M 1194 331  L 2128 331  Q 2691 331 2998 575  Q 3306 819 3409 1350  Q 3513 1878 3302 2120  Q 3091 2363 2525 2363  L 1591 2363  L 1194 331  z M 1653 2694  L 2447 2694  Q 2959 2694 3234 2891  Q 3509 3088 3591 3513  Q 3675 3941 3476 4136  Q 3278 4331 2766 4331  L 1972 4331  L 1653 2694  z M -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 3113 4666  Q 3819 4666 4120 4377  Q 4422 4088 4309 3513  Q 4231 3097 3934 2850  Q 3638 2603 3147 2547  Q 3728 2472 3976 2167  Q 4225 1863 4125 1350  Q 3991 656 3489 328  Q 2988 0 2059 0  L -97 0  z " transform="scale(0.015625)" />
+    </defs>
+    <use xlink:href="#planck-2-DejaVuSerif-Italic-46" transform="translate(0 0.09375)" />
+    <use xlink:href="#planck-2-DejaVuSerif-Italic-3bb" transform="translate(69.384766 -15.478125) scale(0.7)" />
+    <use xlink:href="#planck-2-DejaVuSerif-3d" transform="translate(135.310156 0.09375)" />
+    <use xlink:href="#planck-2-DejaVuSerif-Italic-3c0" transform="translate(238.064063 0.09375)" />
+    <use xlink:href="#planck-2-DejaVuSerif-Italic-42" transform="translate(303.786719 0.09375)" />
+    <use xlink:href="#planck-2-DejaVuSerif-Italic-3bb" transform="translate(377.273047 -15.478125) scale(0.7)" />
+   </g>
+  </g>
+ </g>
+</g><g transform="translate(0 136.0)"><defs>
+  </defs>
+ <g id="planck-3-figure_1">
+  <g id="planck-3-patch_1">
+   <path d="M 0 22  L 123 22  L 123 0  L 0 0  z " style="fill: #ffffff" />
+  </g>
+  <g id="planck-3-text_1">
+   
+   <g transform="translate(0 18) scale(0.2 -0.2)">
+    <defs>
+     <path id="planck-3-DejaVuSerif-Italic-4c" d="M -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 2631 4666  L 2566 4331  L 1972 4331  L 1206 384  L 3338 384  L 3488 1166  L 3872 1166  L 3647 0  L -97 0  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-Italic-3bb" d="M 1984 4084  Q 1925 4372 1834 4466  Q 1744 4563 1578 4563  Q 1391 4563 1288 4472  Q 1178 4378 1119 4166  L 825 4166  L 947 4800  Q 1113 4847 1272 4872  Q 1431 4897 1578 4897  Q 1925 4897 2088 4753  Q 2253 4613 2334 4225  L 3100 334  L 3472 334  L 3406 0  L 2159 0  L 2225 334  L 2722 334  L 2281 2628  L 853 334  L 1384 334  L 1319 0  L -209 0  L -144 334  L 234 334  L 2116 3388  L 1984 4084  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-3d" d="M 678 2894  L 4684 2894  L 4684 2394  L 678 2394  L 678 2894  z M 678 1619  L 4684 1619  L 4684 1119  L 678 1119  L 678 1619  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-34" d="M 2234 1581  L 2234 4063  L 641 1581  L 2234 1581  z M 3609 0  L 1484 0  L 1484 331  L 2234 331  L 2234 1247  L 197 1247  L 197 1588  L 2241 4750  L 2859 4750  L 2859 1581  L 3750 1581  L 3750 1247  L 2859 1247  L 2859 331  L 3609 331  L 3609 0  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-Italic-3c0" d="M -56 0  L 6 331  L 525 331  L 1044 2988  L 494 2988  L 556 3322  L 4300 3322  L 4238 2988  L 3694 2988  L 3175 331  L 3688 331  L 3625 0  L 2038 0  L 2100 331  L 2597 331  L 3116 2988  L 1619 2988  L 1100 331  L 1600 331  L 1538 0  L -56 0  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-Italic-52" d="M 3066 2316  Q 3272 2256 3403 2114  Q 3534 1972 3609 1716  L 4016 331  L 4584 331  L 4522 0  L 3422 0  L 2981 1484  Q 2856 1916 2706 2042  Q 2556 2169 2250 2169  L 1553 2169  L 1194 331  L 1853 331  L 1791 0  L -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 3175 4666  Q 3856 4666 4164 4341  Q 4472 4016 4356 3419  Q 4263 2938 3938 2661  Q 3613 2384 3066 2316  z M 1619 2503  L 2541 2503  Q 3013 2503 3280 2726  Q 3547 2950 3639 3419  Q 3731 3888 3548 4109  Q 3366 4331 2894 4331  L 1972 4331  L 1619 2503  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-32" d="M 819 3553  L 469 3553  L 469 4384  Q 803 4563 1142 4656  Q 1481 4750 1806 4750  Q 2534 4750 2956 4397  Q 3378 4044 3378 3438  Q 3378 2753 2422 1800  Q 2347 1728 2309 1691  L 1131 513  L 3078 513  L 3078 1088  L 3444 1088  L 3444 0  L 434 0  L 434 341  L 1850 1753  Q 2319 2222 2519 2614  Q 2719 3006 2719 3438  Q 2719 3909 2473 4175  Q 2228 4441 1797 4441  Q 1350 4441 1106 4219  Q 863 3997 819 3553  z " transform="scale(0.015625)" />
+     <path id="planck-3-DejaVuSerif-Italic-46" d="M -97 0  L -34 331  L 559 331  L 1338 4331  L 744 4331  L 809 4666  L 4628 4666  L 4428 3628  L 4044 3628  L 4169 4281  L 1963 4281  L 1659 2719  L 3253 2719  L 3366 3303  L 3750 3303  L 3450 1753  L 3066 1753  L 3178 2338  L 1584 2338  L 1194 331  L 1941 331  L 1878 0  L -97 0  z " transform="scale(0.015625)" />
+    </defs>
+    <use xlink:href="#planck-3-DejaVuSerif-Italic-4c" transform="translate(0 0.7125)" />
+    <use xlink:href="#planck-3-DejaVuSerif-Italic-3bb" transform="translate(66.40625 -14.859375) scale(0.7)" />
+    <use xlink:href="#planck-3-DejaVuSerif-3d" transform="translate(132.331641 0.7125)" />
+    <use xlink:href="#planck-3-DejaVuSerif-34" transform="translate(235.085547 0.7125)" />
+    <use xlink:href="#planck-3-DejaVuSerif-Italic-3c0" transform="translate(298.708594 0.7125)" />
+    <use xlink:href="#planck-3-DejaVuSerif-Italic-52" transform="translate(364.43125 0.7125)" />
+    <use xlink:href="#planck-3-DejaVuSerif-32" transform="translate(446.903229 37.046875) scale(0.7)" />
+    <use xlink:href="#planck-3-DejaVuSerif-Italic-46" transform="translate(494.034674 0.7125)" />
+    <use xlink:href="#planck-3-DejaVuSerif-Italic-3bb" transform="translate(563.41944 -14.859375) scale(0.7)" />
+   </g>
+  </g>
+ </g>
+</g></svg>
+            </div>
+          </aside>
         </div>
       </div>
-      <p class="viz-equation">F<sub>λ</sub> = πB<sub>λ</sub> &nbsp; · &nbsp; λ<sub>peak</sub> = 2897.8 / T &nbsp; [μm]</p>
-      <p class="viz-help">Curve colour approximates the blackbody's visible colour. Brightness is normalized and colours outside the display gamut are clipped; very cool blackbodies emit almost no visible light.</p>
+      <p class="viz-help">Change the sphere radius to change the total luminosity for a blackbody function.</p>
     </section>
   </main>
 

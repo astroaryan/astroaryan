@@ -1,172 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- FUTURE UPDATES: ENABLE HINTS IN THE FUTURE, HITNS INCLUDE MONTH AND THE SIGN ITSELF, ALSO MAKE IT SO THAT THE SAME CONSTELLATION ISN"T REPEATED IN A SERIES OF 12 QUESTIONS -->
-
-<!-- meta data -->
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Constellation Games</title>
+    <title>Constellation & Nebula Games</title>
     <link rel="stylesheet" href="style1.css">
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <script src="variables.js" defer></script>
-  </head>
-<!-- header / table  -->
-  <div class="header1"> 
-    <table class="header1"> 
-      <tr> 
-        <td > <a href="https://physics2astro.org/"> P2A </a> </td>
-        <td color="black"> <a href="constellations.html"> Constellation Games</a> </td>
-        <td><a href="visualizations.html"> Visualizations</a> </td>
-        <td><a href="resources.html"> Astronomy Resources</a> </td>
-        <td><a href="index.html"> About</a> </td>
+    <script src="nebulae/nebulae.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body class="games-page">
+    <header class="games-header header1">
+        <nav aria-label="Main navigation">
+            <table class="header1" role="presentation">
+                <tr>
+                    <td><a href="https://physics2astro.org/">P2A</a></td>
+                    <td><a href="constellations.html" aria-current="page">Constellation Games</a></td>
+                    <td><a href="visualizations.html">Visualizations</a></td>
+                    <td><a href="resources.html">Astronomy Resources</a></td>
+                    <td><a href="index.html">About</a></td>
+                </tr>
+            </table>
+        </nav>
+    </header>
 
-      </tr>
-    </table>
-  </div>
+    <main class="games-main">
+        <section id="backgroundinformationtable" class="constellationtext" aria-label="About the games">
+            <p>Are you an ancient farmer, sailor, or priest? If so, you're probably more familiar with constellations than anyone else in our modern era.</p>
+            <p>Constellations are star groups that form a specific pattern in the sky. Although they vary over millennia (since each star has its own velocity), they've historically helped humans navigate nature and share their various beliefs, experiences, and mythologies. Today, we frequently recognize the Western Zodiac constellations, but other cultures have also pioneered this important field of astronomy. By studying the constellations, you'll benefit by better understanding our shared history, cultures, and our local universe.</p>
+            <p>There's also a nebula game! There are broadly five types of nebulae: emission nebulae, reflection nebulae, dark (absorption) nebulae, planetary nebulae, and supernova remnants, each forming through different stellar evolutionary and physical processes. I think nebulae are some of the most beautiful sights in astronomy, though you'll need a telescope to see them.</p>
+            <p>To me, the night sky is free and entertaining — it's one of the few things that won't change in our tumultuous world. I hope this quiz helps you learn the constellations and about nebulae!</p>
+        </section>
 
-<body>
-  <section id="backgroundinformationtable"> 
-<!-- this handles the background information table --> 
-<div class="constellationtext" style="border:4px solid rgb(255, 255, 255);"> 
-  <br>
-    <h3 class="constellationtext1"> 
-      Are you an ancient farmer, sailor, or priest? If so, you're probably 
-      more familiar with constellations than anyone else in our modern era.
-    </h3>
-    <h5 class="constellationtext1"> 
-      Constellations are star groups that form a specific pattern in the sky. 
-      Although they vary over millenia (since each star has its own velocity), 
-      they've historically helped humans navigate nature 
-      and share their various beliefs, experiences, and mythologies. 
-      Today, we frequently recognize the Western Zodiac constellations,
-      but other cultures have also pioneered this important field of astronomy.
-      By studying the constellations, you'll benefit by better understanding our shared history, cultures, and our local universe.
-    </h5> 
-    <h5 class="constellationtext1"> 
-      To me, the night sky is free and entertaining -- it's one of the few things that won't change in our tumultous world. 
-      I hope this quiz helps you learn the constellations, and if interested, scroll down to read more about our cosmos.
-    </h5>
+        <section id="fontforconstellationgame" aria-labelledby="headingforconstellationgame1">
+            <h1 id="headingforconstellationgame1">Astronomy Games</h1>
+            <noscript><p>Enable JavaScript to play the identification games.</p></noscript>
 
-    <h5 class="constellationtext1"> *Mobile support is coming soon, thank you for your patience!*</h5>
-  <br>
-</div >
-</section>
+            <div id="resultstab" class="game-results" hidden>
+                <h2 tabindex="-1" id="results-heading">Round complete</h2>
+                <p id="results1"></p>
+            </div>
 
-<!-- this handles the quiz interface--> 
-<section id="quizinterface"> 
-<!-- this handles the quiz interface--> 
-<!-- constellation game before click--> 
-<div id="fontforconstellationgame" style="border:6px dotted rgb(255, 255, 255);"> 
-  <br>
-    <h1 id="headingforconstellationgame1" class="headingforconstellatiomgame"> Constellation Quizzes</h1>
-    <h3 id="clickbelow" class="marginbottomfooter headingforconstellatiomgame"> Click below! </h3>
-    <div id="resultstab" style="display: none">
-    <p id="results1"> </p>
-    <p id="results2"> Click to play again!</p>
-    </div>
+            <div id="game-choices" class="game-choices" role="group" aria-label="Choose a game">
+                <button id="zeasy1" class="game-choice" type="button" data-game="zodiac">
+                    <span class="game-choice-name">Western Zodiac</span>
+                    <span class="game-choice-description">12 familiar constellations</span>
+                </button>
+                <button id="nebula-game" class="game-choice" type="button" data-game="nebula">
+                    <span class="game-choice-name">Nebula Game</span>
+                    <span class="game-choice-description" id="nebula-description">Clouds of gas, dust, and starlight</span>
+                </button>
+            </div>
 
-<!-- quiz start--> 
-<div>
+            <div id="quiz" hidden>
+                <div class="quiz-progress">
+                    <p id="question-counter"></p>
+                    <progress id="round-progress" max="12" value="0" aria-label="Round progress"></progress>
+                    <p id="scorecard">Score: 0 / 0</p>
+                </div>
+                <div class="quiz-layout">
+                    <figure class="quiz-figure">
+                        <div class="image-stage" aria-busy="false">
+                            <img id="constellationimage1" alt="Identification question" hidden>
+                            <p id="image-status" role="status">Loading image…</p>
+                            <button id="retry-image" type="button" class="quiz-button" hidden>Retry image</button>
+                        </div>
+                        <figcaption id="image-credit" class="image-credit"></figcaption>
+                    </figure>
+                    <div class="quiz-answers">
+                        <h2 id="question-heading" tabindex="-1">Which constellation is in the image?</h2>
+                        <div id="answeroptions" role="group" aria-labelledby="question-heading">
+                            <button id="answeroption1" class="answer-option" type="button"></button>
+                            <button id="answeroption2" class="answer-option" type="button"></button>
+                            <button id="answeroption3" class="answer-option" type="button"></button>
+                            <button id="answeroption4" class="answer-option" type="button"></button>
+                        </div>
+                        <div class="answer-explanation">
+                            <p id="answer-feedback" role="status" aria-atomic="true"></p>
+                            <p id="question-detail"></p>
+                        </div>
+                        <button id="next-question" class="quiz-button next-question" type="button" hidden>Next question</button>
+                    </div>
+                </div>
+                <div class="quiz-actions">
+                    <button id="restart" class="quiz-button" type="button">Restart round</button>
+                    <button id="change-game" class="quiz-button" type="button">Choose a game</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-<div id="disappear1">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</div>
-<table id="constellationAstart" class="borderremoval outsidetable">
-  <tr class="borderremoval insidetable">
-    <td id="zeasy1" class="constellationfont zeasy borderremoval"> Zodiac Easy</td>
-    <td id="zhard1" class="constellationfont zhard borderremoval"> Zodiac Hard</td>
-    <td id="zeightyeight1" class="constellationfont zeightyeight borderremoval"> 88 Constellations</td>
-  </tr>
-
-</table>
-<div id="disappear">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-</div>
-</div>
-<!-- quiz start--> 
-
-<div id="quiz" style="display: none"> 
-  <br>
-  <br>
-
-  <div class="container"> 
-  <img id='constellationimage1'class='left' src="constellations/virgo.png" alt="Constellation Source">
-  <div class='right'>
-  <h6 >Which constellation is in the image?</h6>
-  <br>
-  <table id="answeroptions">
-    <tr>
-      <td id="answeroption1" class="answeroptions3" onclick="checkAnswer('A')">Answer 1</td>
-      <td id="answeroption2" class="answeroptions3" onclick="checkAnswer('B')">Answer 2</td>
-    </tr>
-    <tr>
-      <td id="answeroption3" class="answeroptions3" onclick="checkAnswer('C')">Answer 3 </td>
-      <td id="answeroption4" class="answeroptions3" onclick="checkAnswer('D')">Answer 4</td>
-    </tr>
-  </table>
-
-  <h6 id="scorecard"> Score: Nothing yet! </h6>
-  </div>
-  </div>
-
-  <br>
-  <br>
-  <table id="restart" >
-    <tr id="restart1">
-      <td id="restart2" class="restart3"> Restart </td>
-    </tr>
-  </table>
-  <br>
-
-</div>
-
-</div>
-</div>
-<!-- constellation game before click--> 
-</section>
-
-
-<!-- footer -->
-  <div>
     <footer>
-      <h4> Hi, I'm Aryan. I'm a Sagittarius!</h4>
-      <h4 id="connectwithme">Connect with me! </h4>
-      <h4 id="socialmediahandles">
-         <a href="https://www.linkedin.com/in/aryan-gupta448/" target="_blank"><img src="images/linkedin.png" width="44px" alt="My LinkedIn Account" /></a>
-         <!-- <a href="https://www.youtube.com/c/redauraforlife" target="_blank"><img src="images/youtube.png" width="78px" alt="My YouTube Account" /></a> -->
-         <a href="https://www.instagram.com/astroaryang/" target="_blank"><img src="images/instagram.png" width="44px" alt="My Instagram Account" /></a>
-         <a href="mailto:" data-contact-email target="_blank"><img src="images/gmail.png" width="50px" alt="Email me"/> </a>
-
-      </h4>
-     </footer>
-
-</div>
-<!-- footer -->
-
-<script src="script.js"></script>
+        <h4>Hi, I'm Aryan. I'm a Sagittarius!</h4>
+        <h4 id="connectwithme">Connect with me!</h4>
+        <div id="socialmediahandles" class="social-links">
+            <a href="https://www.linkedin.com/in/aryan-gupta448/" target="_blank" rel="noopener noreferrer"><img src="images/linkedin.png" width="44" alt="My LinkedIn Account"></a>
+            <a href="https://www.instagram.com/astroaryang/" target="_blank" rel="noopener noreferrer"><img src="images/instagram.png" width="44" alt="My Instagram Account"></a>
+            <a href="mailto:" data-contact-email><img src="images/gmail.png" width="50" alt="Email me"></a>
+        </div>
+    </footer>
 </body>
 </html>

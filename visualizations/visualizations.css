@@ -1,4 +1,20 @@
 /* The quiz stylesheet supplies the starfield, nebula, font, and gold navigation. */
+.visualizations-intro {
+    box-sizing: border-box;
+    min-width: 0;
+    margin: 32px clamp(24px, 5vw, 150px);
+    padding: clamp(20px, 3vw, 36px);
+    border: 2px solid #ffffff70;
+    border-radius: 8px;
+    background-position: center;
+    text-shadow: 0 1px 4px #000;
+    font-size: calc(clamp(1rem, 1.5vw, 1.15rem) + 2pt);
+    line-height: 1.65;
+}
+.visualizations-intro p:first-child { margin-top: 0; font-size: calc(clamp(1.2rem, 2vw, 1.5rem) + 2pt); font-weight: bold; }
+.visualizations-intro p { margin: 18px 0; max-width: 100ch; }
+.visualizations-intro p:last-child { margin-bottom: 0; }
+.visualizations-intro + #fontforconstellationgame { margin-top: 32px; }
 #fontforconstellationgame.visualizations-panel {
     box-sizing: border-box;
     min-width: 0;
@@ -13,16 +29,32 @@
 .visualizations-panel h1 { line-height: 1.1; }
 .visualization { padding: 0 8px 36px; min-width: 0; }
 .visualization + .visualization { border-top: 2px dotted white; padding-top: 36px; }
-.visualization h2 { margin: 0 0 12px; font-size: 2.25rem; line-height: 1.2; }
-.viz-intro { margin: 0 auto 24px; max-width: 750px; font-size: 1.2rem; }
-.viz-layout { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 32px; text-align: left; }
-.viz-controls { flex: 1 1 250px; min-width: 0; max-width: 330px; }
-.viz-display { flex: 3 1 460px; min-width: 0; text-align: center; }
-.viz-control { margin-bottom: 24px; }
-.control-label { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
-.control-label label { font-size: 1.05rem; font-weight: bold; }
+.visualization h2 { margin: 0 0 28px; font-size: 2.25rem; line-height: 1.2; }
+.viz-layout { display: flex; align-items: flex-start; gap: 24px; text-align: left; }
+.viz-controls { flex: 0 0 250px; min-width: 0; }
+.blackbody-plot { text-align: center; }
+.viz-control { margin-bottom: 16px; }
+.viz-content { display: flex; align-items: flex-start; gap: 20px; flex: 1; min-width: 0; }
+.plot-panel, .results-panel { box-sizing: border-box; background: #fff; color: #111; }
+.plot-panel { flex: 1; min-width: 0; padding: 10px; }
+.planet-plot { background: #000; box-shadow: inset 0 0 0 3px #fff; }
+.results-panel { flex: 0 0 240px; min-width: 0; padding: 20px; }
+.results-panel .viz-result { font-size: 1.2rem; line-height: 1.5; }
+.derived-values { margin: 24px 0; }
+.derived-values > div { margin: 16px 0; }
+.derived-values dt { font-size: 0.9rem; color: #555; }
+.derived-values dd { margin: 2px 0 0; font-size: 1.2rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+.derived-result { margin: 8px 0; font-size: 1.5rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+.equation-panel { margin: 26px 0; }
+.equation-label { margin: 0 0 16px; font-size: 1rem; }
+.equilibrium-equation, .planck-equation, .stefan-equation { display: block; width: 100%; height: auto; }
+.plot-panel .viz-help, .results-panel .viz-help { color: #333; }
+.blackbody-plot { padding: 20px; }
+.control-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.control-label label { flex: 1; font-size: 1.05rem; font-weight: bold; }
 .viz-control input[type="number"] {
-    width: 96px;
+    flex: 0 0 85px;
+    width: 85px;
     box-sizing: border-box;
     padding: 6px;
     border: 1px solid #c3b6ac;
@@ -30,10 +62,15 @@
     font: inherit;
     color: white;
     background: rgba(0, 0, 0, 0.45);
+    appearance: textfield;
+    -moz-appearance: textfield;
 }
+.viz-control input[type="number"]::-webkit-inner-spin-button,
+.viz-control input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .viz-control input[type="range"] { width: 100%; min-height: 34px; margin: 4px 0 0; accent-color: goldenrod; cursor: pointer; }
 .control-limits { display: flex; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: #eee; }
-.mode-controls, .viz-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0; }
+.viz-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; margin-top: 20px; }
+.visualizations-panel .viz-actions button { flex: 1; padding: 10px 6px; font-size: 1rem; white-space: nowrap; }
 .visualizations-panel button {
     font: bold 1.05rem 'Calibri', sans-serif;
     background: url('../images/beige.png');
@@ -45,21 +82,18 @@
     cursor: pointer;
 }
 .visualizations-panel button:hover { border-color: lightseagreen; }
-.mode-controls button[aria-pressed="true"] { outline: 2px solid white; outline-offset: 3px; }
 .visualizations-panel :focus-visible { outline: 3px solid #ffe7a1; outline-offset: 4px; }
 .viz-result { margin: 0 0 10px; font-size: 1.4rem; line-height: 1.3; }
-.viz-summary { margin: 8px 0; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
 .viz-status { min-height: 1.5em; margin: 10px 0; font-size: 0.95rem; }
-.viz-status.warning { color: #fff; border-left: 4px solid crimson; padding: 8px; background: rgba(120, 0, 30, 0.65); }
+.viz-status.warning { color: crimson; border-left: 4px solid crimson; padding: 8px; background: #fff; }
 .viz-help { color: #eee; font-size: 0.95rem; line-height: 1.5; margin: 14px auto; max-width: 900px; }
-.viz-equation { font-size: 1.15rem; margin: 28px 0 12px; }
-.planet-diagram, .blackbody-diagram { display: block; width: 100%; height: auto; overflow: hidden; background: transparent; }
-.planet-diagram { max-height: 450px; }
-.plot-text { fill: white; font-family: 'Calibri', sans-serif; paint-order: stroke; stroke: #231821; stroke-width: 3px; stroke-linejoin: round; }
+.planet-diagram, .blackbody-diagram { display: block; width: 100%; height: auto; overflow: hidden; background: #fff; }
+.planet-diagram { min-height: 350px; background: #000; }
+.plot-text { fill: #111; font-family: 'Calibri', sans-serif; stroke: none; }
 .planet-diagram .plot-text { font-size: 17px; }
-.planet-diagram .secondary-label { fill: #dedede; font-size: 15px; }
+.planet-diagram .secondary-label { fill: #d9e1ef; font-size: 15px; }
 .planet-hit { fill: transparent; cursor: grab; touch-action: none; stroke: transparent; stroke-width: 2; }
-.planet-hit:hover, .planet-hit:focus-visible { stroke: white; stroke-dasharray: 4 4; outline: none; }
+.planet-hit:hover, .planet-hit:focus-visible { stroke: #fff; stroke-dasharray: 4 4; outline: none; }
 .planet-hit.dragging { cursor: grabbing; }
 .blackbody-diagram .plot-text { font-size: 17px; }
 .blackbody-diagram .axis-label { font-size: 18px; }
@@ -68,22 +102,28 @@
     table.header1 { width: 100%; table-layout: fixed; font-size: 1.3rem; }
     table.header1 td { padding: 12px; overflow-wrap: anywhere; }
     #fontforconstellationgame.visualizations-panel { margin-left: 24px; margin-right: 24px; }
+    .visualizations-intro { margin-left: 24px; margin-right: 24px; }
     .viz-layout { gap: 20px; }
-}
-@media (max-width: 900px) {
-    .viz-layout { flex-direction: column; }
-    .viz-controls { display: flex; flex-wrap: wrap; gap: 0 24px; max-width: none; width: 100%; flex-basis: auto; }
-    .viz-control { flex: 1 1 240px; }
-    .viz-controls > #blackbody-controls { flex: 1 1 100%; }
-    .viz-display { flex-basis: auto; width: 100%; }
+    .viz-content { flex-direction: column; }
+    .plot-panel, .results-panel { flex: auto; width: 100%; }
+    .results-panel .derived-values { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+    .equilibrium-equation { max-width: 320px; }
+    .planck-equation, .stefan-equation { max-width: 240px; }
 }
 @media (max-width: 760px) {
+    .viz-layout { flex-direction: column; }
+    .viz-controls { width: 100%; flex-basis: auto; }
+    .viz-content { width: 100%; }
     table.header1 { font-size: 1rem; }
     table.header1 td { padding: 8px; }
     #fontforconstellationgame.visualizations-panel { margin: 40px 12px 50px; padding: 20px 12px; }
+    .visualizations-intro { margin-left: 12px; margin-right: 12px; }
     .visualizations-panel h1 { font-size: clamp(1.8rem, 9vw, 2.5rem); }
     .visualization { padding-left: 0; padding-right: 0; }
     .visualization h2 { font-size: 1.8rem; }
+    .planet-diagram { min-height: 260px; }
+    .blackbody-plot { padding: 12px 4px; }
+    .results-panel { padding: 18px; }
 }
 @media (max-width: 600px) {
     table.header1, table.header1 tbody { display: block; }
@@ -91,7 +131,8 @@
     table.header1 tr { display: flex; flex-wrap: wrap; }
     table.header1 td { box-sizing: border-box; flex: 1 1 50%; border-width: 6px; overflow-wrap: normal; }
     table.header1 td:last-child { flex-basis: 100%; }
-    .diagram-label { display: none; }
     .viz-result { font-size: 1.2rem; }
-    .viz-control { flex-basis: 100%; }
+}
+@media (max-width: 480px) {
+    .visualizations-intro { margin-top: 20px; margin-bottom: 20px; padding: 18px; }
 }

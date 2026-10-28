@@ -1,0 +1,274 @@
+NEBULA INFORMATION AND IMAGE SOURCES — revised 2026-10-28
+
+This directory currently contains 30 objects; all are documented below.
+Nebula info links describe the object. Image source links document the actual image used; these are distinct when different photographs are shown on the information page.
+Stellarium screenshots retain the photographer credits supplied by its texture catalog. Where the original image URL was missing or unavailable, the image source links to its Stellarium catalog entry.
+External photographs retain their original framing and colours; conversion to PNG and proportional downsampling only. Their full image credits and license links are displayed below the game image.
+Reuse licenses for the remaining Stellarium textures have not been independently verified.
+
+Orion Nebula — M 42
+File: orion-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-42/
+Credit: HG731GZ
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L322
+Capture: Stellarium 26.2; texture(s): m42.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Lagoon Nebula — M 8
+File: lagoon-nebula.png
+Nebula info: https://www.nasa.gov/image-article/lagoon-nebula/
+Credit: Dylan O'Donnell
+Image source: http://deography.com/m8-lagoon-nebula-ngc6559/
+Capture: Stellarium 26.2; texture(s): m8.png
+License: Not independently verified for this Stellarium texture.
+
+Eagle Nebula — M 16
+File: eagle-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-16/
+Credit: Sun Gang
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L130
+Capture: Stellarium 26.2; texture(s): m16.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Swan Nebula — M 17
+File: swan-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-17/
+Credit: Dylan O'Donnell
+Image source: http://deography.com/the-tree-of-life-m17-omega-nebula/
+Capture: Stellarium 26.2; texture(s): m17.png
+License: Not independently verified for this Stellarium texture.
+
+Trifid Nebula — M 20
+File: trifid-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-20/
+Credit: Hewholooks
+Image source: https://commons.wikimedia.org/wiki/File:TrifidHunterWilson.jpg
+Capture: Stellarium 26.2; texture(s): m20.png
+License: Not independently verified for this Stellarium texture.
+
+Rosette Nebula — NGC 2244
+File: rosette-nebula.png
+Nebula info: https://science.nasa.gov/asset/hubble/rosette-nebula/
+Credit: Keesscherer
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L1523
+Original source URL: https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg
+Capture: Stellarium 26.2; texture(s): n2244.png
+Source note: The original image page was unavailable when checked; the source link points to its Stellarium catalog credit.
+License: Not independently verified for this Stellarium texture.
+
+Carina Nebula — NGC 3372
+File: carina-nebula.png
+Nebula info: https://esahubble.org/images/heic0707g/
+Credit: Harel Boren
+Image source: https://commons.wikimedia.org/wiki/File:Carina_Nebula_by_Harel_Boren_(151851961).jpg
+Original source URL: http://www.pbase.com/boren/image/151851961/original
+Capture: Stellarium 26.2; texture(s): etaCarinae.png
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0/
+License/source documentation: https://commons.wikimedia.org/wiki/File:Carina_Nebula_by_Harel_Boren_(151851961).jpg
+Modifications: Rendered from the Stellarium texture with adjusted framing and field of view; saved as a PNG screenshot.
+
+Tarantula Nebula — NGC 2070
+File: tarantula-nebula.png
+Nebula info: https://www.eso.org/public/images/tarantula/
+Credit: ESO/IDA/Danish 1.5 m/R. Gendler, C. C. Thöne, C. Féron, and J.-E. Ovaldsen
+Image source: https://www.eso.org/public/images/tarantula/
+Download: https://cdn.eso.org/images/large/tarantula.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Modifications: Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.
+
+North America Nebula — NGC 7000
+File: north-america-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-20/
+Credit: Adam Block/Steward Observatory/University of Arizona
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L3572
+Original source URL: http://www.caelumobservatory.com/gallery/n7000astrograph.shtml
+Capture: Stellarium 26.2; texture(s): n7000.png
+Source note: The original image page was unavailable when checked; the source link points to its Stellarium catalog credit.
+License: Not independently verified for this Stellarium texture.
+
+Pelican Nebula — IC 5070
+File: pelican-nebula.png
+Nebula info: https://science.nasa.gov/image-article/apod/apod-2026-september-7-the-pelican-nebula-in-gas-dust-and-stars/
+Credit: Adam Block/Steward Observatory/University of Arizona
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L3572
+Original source URL: http://www.caelumobservatory.com/gallery/n7000astrograph.shtml
+Capture: Stellarium 26.2; texture(s): n7000.png
+Source note: The original image page was unavailable when checked; the source link points to its Stellarium catalog credit.
+License: Not independently verified for this Stellarium texture.
+
+California Nebula — NGC 1499
+File: california-nebula.png
+Nebula info: https://science.nasa.gov/image-article/apod-2021-march-10-ngc-1499-the-california-nebula/
+Credit: Zhao Jingna
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L1291
+Capture: Stellarium 26.2; texture(s): n1499.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Heart Nebula — IC 1805
+File: heart-nebula.png
+Nebula info: https://science.nasa.gov/image-detail/heart-and-soul-nebula-as-seen-by-wise-3/
+Credit: Giuseppe Donatiello, post-processing: Sun Shuwei
+Image source: https://flickr.com/photos/133259498@N05/54332176110/
+Capture: Stellarium 26.2; texture(s): ic1805.png
+License: Not independently verified for this Stellarium texture.
+
+Soul Nebula — IC 1848
+File: soul-nebula.png
+Nebula info: https://science.nasa.gov/image-detail/heart-and-soul-nebula-as-seen-by-wise-3/
+Credit: Giuseppe Donatiello, post-processing: Sun Shuwei
+Image source: https://flickr.com/photos/133259498@N05/54332176110/
+Capture: Stellarium 26.2; texture(s): ic1848.png
+License: Not independently verified for this Stellarium texture.
+
+Bubble Nebula — NGC 7635
+File: bubble-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-11/
+Credit: K Bahr, post-processing: Sun Shuwei
+Image source: https://www.flickr.com/photos/158350039@N03/51008986702/
+Capture: Stellarium 26.2; texture(s): n7635.png
+License: Not independently verified for this Stellarium texture.
+
+Flame Nebula — NGC 2024
+File: flame-nebula.png
+Nebula info: https://science.nasa.gov/missions/hubble/hubble-spots-swirls-of-dust-in-the-flame-nebula/
+Credit: Manuel Peitsch, post-processing: Sun Shuwei
+Image source: https://manuel-astro.ch/project/south-of-orions-belt/
+Capture: Stellarium 26.2; texture(s): ic434.png
+License: Not independently verified for this Stellarium texture.
+
+Ring Nebula — M 57
+File: ring-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-57/
+Credit: Stephane Dumont
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L434
+Capture: Stellarium 26.2; texture(s): m57dumont.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Dumbbell Nebula — M 27
+File: dumbbell-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-27/
+Credit: Stephane Dumont
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L218
+Capture: Stellarium 26.2; texture(s): m27dumont.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Helix Nebula — NGC 7293
+File: helix-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-63/
+Credit: Dylan O'Donnell
+Image source: https://deography.com/the-eye-of-god-helix-nebula-ngc-7293/
+Capture: Stellarium 26.2; texture(s): n7293.png
+License: Not independently verified for this Stellarium texture.
+
+Cat's Eye Nebula — NGC 6543
+File: cats-eye-nebula.png
+Nebula info: https://esahubble.org/images/heic0414a/
+Credit: ESA, NASA, HEIC and The Hubble Heritage Team (STScI/AURA)
+Image source: https://esahubble.org/images/heic0414a/
+Download: https://cdn.esahubble.org/archives/images/large/heic0414a.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Modifications: Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.
+
+Owl Nebula — M 97
+File: owl-nebula.png
+Nebula info: https://science.nasa.gov/image-article/apod-2009-may-15-m97-the-owl-nebula/
+Credit: Stephane Dumont
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L738
+Capture: Stellarium 26.2; texture(s): m97dumont.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Butterfly Nebula — NGC 6302
+File: butterfly-nebula.png
+Nebula info: https://esahubble.org/images/heic0910h/
+Credit: NASA, ESA and the Hubble SM4 ERO Team
+Image source: https://esahubble.org/images/heic0910h/
+Download: https://cdn.esahubble.org/archives/images/large/heic0910h.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+License/source documentation: https://esahubble.org/copyright/
+Modifications: Converted to PNG and proportionally downsampled to a 2200-pixel longest edge. Original framing and colours retained.
+
+Horsehead Nebula — B 33
+File: horsehead-nebula.png
+Nebula info: https://www.eso.org/public/images/eso0202a/
+Credit: ESO
+Image source: https://www.eso.org/public/images/eso0202a/
+Download: https://cdn.eso.org/images/large/eso0202a.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Modifications: Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.
+
+Cone Nebula — Cone region within NGC 2264
+File: cone-nebula.png
+Nebula info: https://www.eso.org/public/images/eso2215a/
+Credit: ESO
+Image source: https://www.eso.org/public/images/eso2215a/
+Download: https://cdn.eso.org/images/large/eso2215a.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Modifications: Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.
+
+Elephant's Trunk Nebula — IC 1396A (within IC 1396)
+File: elephants-trunk-nebula.png
+Nebula info: https://science.nasa.gov/photojournal/blowin-in-the-stellar-wind/
+Credit: T.A. Rector (University of Alaska Anchorage) and H. Schweiker (WIYN and NOIRLab/NSF/AURA)
+Image source: https://noirlab.edu/public/images/noao1507a/
+Download: https://upload.wikimedia.org/wikipedia/commons/9/9f/IC_1396A_Elephant_Trunk_Nebula_%28noao1507a%29.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Modifications: Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.
+
+Crab Nebula — M 1
+File: crab-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-1/
+Credit: Stephane Dumont
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L9
+Capture: Stellarium 26.2; texture(s): m1dumont.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Veil Nebula — NGC 6992
+File: veil-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-33/
+Credit: Jose A Mtanous
+Image source: https://commons.wikimedia.org/wiki/File:Veil_Nebula_Complex_NGC_6960,_6992,_6995,_6974,_6979,_IC_1340.jpg
+Capture: Stellarium 26.2; texture(s): n6960.png
+License: Not independently verified for this Stellarium texture.
+
+Jellyfish Nebula — IC 443
+File: jellyfish-nebula.png
+Nebula info: https://science.nasa.gov/image-article/apod-2010-may-15-the-elusive-jellyfish-nebula/
+Credit: Giuseppe Donatiello, post-processing: Sun Shuwei
+Image source: https://flickr.com/photos/133259498@N05/52705027741/
+Capture: Stellarium 26.2; texture(s): ic443.png
+License: Not independently verified for this Stellarium texture.
+
+Iris Nebula — NGC 7023
+File: iris-nebula.png
+Nebula info: https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-4/
+Credit: T.A. Rector/University of Alaska Anchorage, H. Schweiker/WIYN and NOIRLab/NSF/AURA
+Image source: https://noirlab.edu/public/images/noao-ngc7023/
+Download: https://upload.wikimedia.org/wikipedia/commons/8/83/Iris_Nebula_NGC_7023_%28noao-ngc7023%29.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+License/source documentation: https://commons.wikimedia.org/wiki/File:Iris_Nebula_NGC_7023_(noao-ngc7023).jpg
+Modifications: Converted to PNG and proportionally downsampled to a 2200-pixel longest edge. Original framing and colours retained.
+
+Witch Head Nebula — IC 2118
+File: witch-head-nebula.png
+Nebula info: https://www.nasa.gov/image-article/witch-head-nebula/
+Credit: Zhao Jingna
+Image source: https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L3988
+Capture: Stellarium 26.2; texture(s): ic2118-1.png, ic2118-2.png
+Source note: Stellarium texture catalog entry; no original photographer URL was supplied.
+License: Not independently verified for this Stellarium texture.
+
+Running Man Nebula — NGC 1977
+File: running-man-nebula.png
+Nebula info: https://science.nasa.gov/missions/hubble/hubble-witnesses-shock-wave-of-colliding-gases-in-running-man-nebula/
+Credit: W4sm astro
+Image source: https://commons.wikimedia.org/wiki/File:NGC1977_CDK_Large03.jpg
+Download: https://upload.wikimedia.org/wikipedia/commons/9/91/NGC1977_CDK_Large03.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0/
+Modifications: Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.

@@ -1,27 +1,16 @@
 {
-  "capture_application": "Stellarium 26.2",
+  "capture_application": "Stellarium 26.2 screenshots and externally sourced astronomical images",
   "capture_date": "2026-10-28",
-  "image_dimensions": [
-    1920,
-    1200
-  ],
   "format": "PNG",
   "counts": {
-    "emission": 16,
+    "emission": 15,
     "planetary": 6,
     "dark": 3,
     "supernova_remnant": 3,
     "reflection": 3
   },
-  "capture_settings": {
-    "gui": false,
-    "labels": false,
-    "object_markers": false,
-    "synthetic_stars": false,
-    "mount": "equatorial"
-  },
   "category_note": "Primary categories for the game; several objects contain mixed emission, reflection, or dark components.",
-  "credits_note": "Image credits transcribed from the installed Stellarium texture catalog; this manifest does not assert a reuse license.",
+  "credits_note": "External replacements include full source credits and licenses. Stellarium screenshots retain credits from the installed texture catalog.",
   "nebulae": [
     {
       "name": "Orion Nebula",
@@ -37,7 +26,16 @@
         {
           "short": "HG731GZ"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-42/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L322",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Lagoon Nebula",
@@ -54,7 +52,15 @@
           "short": "Dylan O'Donnell",
           "infoUrl": "http://deography.com/m8-lagoon-nebula-ngc6559/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://www.nasa.gov/image-article/lagoon-nebula/",
+      "source_url": "http://deography.com/m8-lagoon-nebula-ngc6559/"
     },
     {
       "name": "Eagle Nebula",
@@ -70,14 +76,26 @@
         {
           "short": "Sun Gang"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-16/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L130",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Swan Nebula",
       "catalog": "M 17",
       "category": "emission",
-      "fov_degrees": 0.55,
-      "center_j2000": null,
+      "fov_degrees": 0.47,
+      "center_j2000": [
+        275.2,
+        -16.17
+      ],
       "filename": "swan-nebula.png",
       "stellarium_textures": [
         "m17.png"
@@ -90,14 +108,25 @@
       ],
       "aliases": [
         "Omega Nebula"
-      ]
+      ],
+      "image_dimensions": [
+        1600,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-17/",
+      "source_url": "http://deography.com/the-tree-of-life-m17-omega-nebula/"
     },
     {
       "name": "Trifid Nebula",
       "catalog": "M 20",
       "category": "emission",
-      "fov_degrees": 0.5,
-      "center_j2000": null,
+      "fov_degrees": 0.52,
+      "center_j2000": [
+        270.595,
+        -22.97
+      ],
       "filename": "trifid-nebula.png",
       "stellarium_textures": [
         "m20.png"
@@ -107,14 +136,25 @@
           "short": "Hewholooks",
           "infoUrl": "https://commons.wikimedia.org/wiki/File:TrifidHunterWilson.jpg"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1600,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-20/",
+      "source_url": "https://commons.wikimedia.org/wiki/File:TrifidHunterWilson.jpg"
     },
     {
       "name": "Rosette Nebula",
       "catalog": "NGC 2244",
       "category": "emission",
-      "fov_degrees": 1.75,
-      "center_j2000": null,
+      "fov_degrees": 1.55,
+      "center_j2000": [
+        98.05,
+        4.95
+      ],
       "filename": "rosette-nebula.png",
       "stellarium_textures": [
         "n2244.png"
@@ -124,16 +164,26 @@
           "short": "Keesscherer",
           "infoUrl": "https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1600,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/asset/hubble/rosette-nebula/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L1523",
+      "original_source_url": "https://commons.wikimedia.org/wiki/File:2244_and_the_Rosette_Nebula.jpg",
+      "source_note": "The original image page was unavailable when checked; the source link points to its Stellarium catalog credit."
     },
     {
       "name": "Carina Nebula",
       "catalog": "NGC 3372",
       "category": "emission",
-      "fov_degrees": 3.4,
+      "fov_degrees": 2.2,
       "center_j2000": [
-        160.8,
-        -59.6
+        161.0,
+        -59.7
       ],
       "filename": "carina-nebula.png",
       "stellarium_textures": [
@@ -144,32 +194,51 @@
           "short": "Harel Boren",
           "infoUrl": "http://www.pbase.com/boren/image/151851961/original"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1100,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://esahubble.org/images/heic0707g/",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Carina_Nebula_by_Harel_Boren_(151851961).jpg",
+      "original_source_url": "http://www.pbase.com/boren/image/151851961/original",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Carina_Nebula_by_Harel_Boren_(151851961).jpg",
+      "modifications": "Rendered from the Stellarium texture with adjusted framing and field of view; saved as a PNG screenshot."
     },
     {
       "name": "Tarantula Nebula",
       "catalog": "NGC 2070",
       "category": "emission",
-      "fov_degrees": 0.65,
-      "center_j2000": null,
       "filename": "tarantula-nebula.png",
-      "stellarium_textures": [
-        "lmc_10.png"
-      ],
       "image_credits": [
         {
-          "Short": "ESO/R. Gendler and Sun Shuwei",
-          "infoUrl": "http://www.eso.org/public/images/eso1311c/, https://www.eso.org/public/images/eso1021d/"
+          "short": "ESO/IDA/Danish 1.5 m/R. Gendler, C. C. Thöne, C. Féron, and J.-E. Ovaldsen",
+          "infoUrl": "https://www.eso.org/public/images/tarantula/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        2037,
+        2077
+      ],
+      "source_type": "external_astronomical_image",
+      "source_url": "https://www.eso.org/public/images/tarantula/",
+      "download_url": "https://cdn.eso.org/images/large/tarantula.jpg",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.",
+      "info_url": "https://www.eso.org/public/images/tarantula/"
     },
     {
       "name": "North America Nebula",
       "catalog": "NGC 7000",
       "category": "emission",
-      "fov_degrees": 3.5,
+      "fov_degrees": 2.8,
       "center_j2000": [
-        314.4,
+        314.9,
         44.4
       ],
       "filename": "north-america-nebula.png",
@@ -181,16 +250,26 @@
           "short": "Adam Block/Steward Observatory/University of Arizona",
           "infoUrl": "http://www.caelumobservatory.com/gallery/n7000astrograph.shtml"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1600,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-20/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L3572",
+      "original_source_url": "http://www.caelumobservatory.com/gallery/n7000astrograph.shtml",
+      "source_note": "The original image page was unavailable when checked; the source link points to its Stellarium catalog credit."
     },
     {
       "name": "Pelican Nebula",
       "catalog": "IC 5070",
       "category": "emission",
-      "fov_degrees": 1.15,
+      "fov_degrees": 2.2,
       "center_j2000": [
-        312.75,
-        44.36
+        312.65,
+        44.2
       ],
       "filename": "pelican-nebula.png",
       "stellarium_textures": [
@@ -201,7 +280,17 @@
           "short": "Adam Block/Steward Observatory/University of Arizona",
           "infoUrl": "http://www.caelumobservatory.com/gallery/n7000astrograph.shtml"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1600,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/image-article/apod/apod-2026-september-7-the-pelican-nebula-in-gas-dust-and-stars/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L3572",
+      "original_source_url": "http://www.caelumobservatory.com/gallery/n7000astrograph.shtml",
+      "source_note": "The original image page was unavailable when checked; the source link points to its Stellarium catalog credit."
     },
     {
       "name": "California Nebula",
@@ -220,7 +309,16 @@
         {
           "short": "Zhao Jingna"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/image-article/apod-2021-march-10-ngc-1499-the-california-nebula/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L1291",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Heart Nebula",
@@ -240,7 +338,15 @@
           "short": "Giuseppe Donatiello, post-processing: Sun Shuwei",
           "infoUrl": "https://flickr.com/photos/133259498@N05/54332176110/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/image-detail/heart-and-soul-nebula-as-seen-by-wise-3/",
+      "source_url": "https://flickr.com/photos/133259498@N05/54332176110/"
     },
     {
       "name": "Soul Nebula",
@@ -260,7 +366,15 @@
           "short": "Giuseppe Donatiello, post-processing: Sun Shuwei",
           "infoUrl": "https://flickr.com/photos/133259498@N05/54332176110/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/image-detail/heart-and-soul-nebula-as-seen-by-wise-3/",
+      "source_url": "https://flickr.com/photos/133259498@N05/54332176110/"
     },
     {
       "name": "Bubble Nebula",
@@ -277,7 +391,15 @@
           "Short": "K Bahr, post-processing: Sun Shuwei",
           "infoUrl": "https://www.flickr.com/photos/158350039@N03/51008986702/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-11/",
+      "source_url": "https://www.flickr.com/photos/158350039@N03/51008986702/"
     },
     {
       "name": "Flame Nebula",
@@ -294,24 +416,15 @@
           "short": "Manuel Peitsch, post-processing: Sun Shuwei",
           "infoUrl": "https://manuel-astro.ch/project/south-of-orions-belt/"
         }
-      ]
-    },
-    {
-      "name": "Crescent Nebula",
-      "catalog": "NGC 6888",
-      "category": "emission",
-      "fov_degrees": 0.4,
-      "center_j2000": null,
-      "filename": "crescent-nebula.png",
-      "stellarium_textures": [
-        "n6888.png"
       ],
-      "image_credits": [
-        {
-          "short": "Jschulman555",
-          "infoUrl": "https://commons.wikimedia.org/wiki/File:NGC6888_Crescent_nebula.jpg"
-        }
-      ]
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/missions/hubble/hubble-spots-swirls-of-dust-in-the-flame-nebula/",
+      "source_url": "https://manuel-astro.ch/project/south-of-orions-belt/"
     },
     {
       "name": "Ring Nebula",
@@ -327,7 +440,16 @@
         {
           "short": "Stephane Dumont"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-57/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L434",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Dumbbell Nebula",
@@ -343,7 +465,16 @@
         {
           "short": "Stephane Dumont"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-27/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L218",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Helix Nebula",
@@ -360,24 +491,38 @@
           "short": "Dylan O'Donnell",
           "infoUrl": "https://deography.com/the-eye-of-god-helix-nebula-ngc-7293/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-63/",
+      "source_url": "https://deography.com/the-eye-of-god-helix-nebula-ngc-7293/"
     },
     {
       "name": "Cat's Eye Nebula",
       "catalog": "NGC 6543",
       "category": "planetary",
-      "fov_degrees": 0.025,
-      "center_j2000": null,
       "filename": "cats-eye-nebula.png",
-      "stellarium_textures": [
-        "n6543.png"
-      ],
       "image_credits": [
         {
-          "short": "Adam Block/Mount Lemmon SkyCenter/University of Arizona",
-          "infoUrl": "http://www.caelumobservatory.com/gallery/n6543.shtml"
+          "short": "ESA, NASA, HEIC and The Hubble Heritage Team (STScI/AURA)",
+          "infoUrl": "https://esahubble.org/images/heic0414a/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1417,
+        1417
+      ],
+      "source_type": "external_astronomical_image",
+      "source_url": "https://esahubble.org/images/heic0414a/",
+      "download_url": "https://cdn.esahubble.org/archives/images/large/heic0414a.jpg",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.",
+      "info_url": "https://esahubble.org/images/heic0414a/"
     },
     {
       "name": "Owl Nebula",
@@ -393,84 +538,109 @@
         {
           "short": "Stephane Dumont"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/image-article/apod-2009-may-15-m97-the-owl-nebula/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L738",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Butterfly Nebula",
       "catalog": "NGC 6302",
       "category": "planetary",
-      "fov_degrees": 0.065,
-      "center_j2000": null,
       "filename": "butterfly-nebula.png",
-      "stellarium_textures": [
-        "n6302.png"
-      ],
       "image_credits": [
         {
-          "short": "Adam Block/Mount Lemmon SkyCenter/University of Arizona",
-          "infoUrl": "http://www.caelumobservatory.com/gallery/n6302.shtml"
+          "short": "NASA, ESA and the Hubble SM4 ERO Team",
+          "infoUrl": "https://esahubble.org/images/heic0910h/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1887,
+        2200
+      ],
+      "source_type": "external_astronomical_image",
+      "info_url": "https://esahubble.org/images/heic0910h/",
+      "source_url": "https://esahubble.org/images/heic0910h/",
+      "download_url": "https://cdn.esahubble.org/archives/images/large/heic0910h.jpg",
+      "license_evidence_url": "https://esahubble.org/copyright/",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG and proportionally downsampled to a 2200-pixel longest edge. Original framing and colours retained."
     },
     {
       "name": "Horsehead Nebula",
       "catalog": "B 33",
       "category": "dark",
-      "fov_degrees": 0.4,
-      "center_j2000": [
-        85.25,
-        -2.46
-      ],
       "filename": "horsehead-nebula.png",
-      "stellarium_textures": [
-        "ic434.png"
-      ],
       "image_credits": [
         {
-          "short": "Manuel Peitsch, post-processing: Sun Shuwei",
-          "infoUrl": "https://manuel-astro.ch/project/south-of-orions-belt/"
+          "short": "ESO",
+          "infoUrl": "https://www.eso.org/public/images/eso0202a/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        2138,
+        2200
+      ],
+      "source_type": "external_astronomical_image",
+      "source_url": "https://www.eso.org/public/images/eso0202a/",
+      "download_url": "https://cdn.eso.org/images/large/eso0202a.jpg",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.",
+      "info_url": "https://www.eso.org/public/images/eso0202a/"
     },
     {
       "name": "Cone Nebula",
       "catalog": "Cone region within NGC 2264",
       "category": "dark",
-      "fov_degrees": 0.42,
-      "center_j2000": [
-        100.27,
-        9.42
-      ],
       "filename": "cone-nebula.png",
-      "stellarium_textures": [
-        "n2264.png"
-      ],
       "image_credits": [
         {
-          "short": "Giuseppe Donatiello, post-processing: Sun Shuwei",
-          "infoUrl": "https://flickr.com/photos/133259498@N05/52927746141/"
+          "short": "ESO",
+          "infoUrl": "https://www.eso.org/public/images/eso2215a/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1639,
+        1682
+      ],
+      "source_type": "external_astronomical_image",
+      "source_url": "https://www.eso.org/public/images/eso2215a/",
+      "download_url": "https://cdn.eso.org/images/large/eso2215a.jpg",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.",
+      "info_url": "https://www.eso.org/public/images/eso2215a/"
     },
     {
       "name": "Elephant's Trunk Nebula",
       "catalog": "IC 1396A (within IC 1396)",
       "category": "dark",
-      "fov_degrees": 0.75,
-      "center_j2000": [
-        323.9,
-        57.45
-      ],
       "filename": "elephants-trunk-nebula.png",
-      "stellarium_textures": [
-        "ic1396.png"
-      ],
       "image_credits": [
         {
-          "short": "Giuseppe Donatiello",
-          "infoUrl": "https://commons.wikimedia.org/wiki/File:IC_1396_rev_20140921_s_(18237481073).jpg"
+          "short": "T.A. Rector (University of Alaska Anchorage) and H. Schweiker (WIYN and NOIRLab/NSF/AURA)",
+          "infoUrl": "https://noirlab.edu/public/images/noao1507a/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        2200,
+        2181
+      ],
+      "source_type": "external_astronomical_image",
+      "source_url": "https://noirlab.edu/public/images/noao1507a/",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/IC_1396A_Elephant_Trunk_Nebula_%28noao1507a%29.jpg",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.",
+      "info_url": "https://science.nasa.gov/photojournal/blowin-in-the-stellar-wind/"
     },
     {
       "name": "Crab Nebula",
@@ -486,16 +656,25 @@
         {
           "short": "Stephane Dumont"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-1/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L9",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Veil Nebula",
       "catalog": "NGC 6992",
       "category": "supernova_remnant",
-      "fov_degrees": 4.4,
+      "fov_degrees": 3.7,
       "center_j2000": [
         312.8,
-        30.7
+        30.65
       ],
       "filename": "veil-nebula.png",
       "stellarium_textures": [
@@ -509,7 +688,15 @@
       ],
       "aliases": [
         "Cygnus Loop"
-      ]
+      ],
+      "image_dimensions": [
+        1600,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-33/",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Veil_Nebula_Complex_NGC_6960,_6992,_6995,_6974,_6979,_IC_1340.jpg"
     },
     {
       "name": "Jellyfish Nebula",
@@ -529,33 +716,48 @@
           "short": "Giuseppe Donatiello, post-processing: Sun Shuwei",
           "infoUrl": "https://flickr.com/photos/133259498@N05/52705027741/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1920,
+        1200
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://science.nasa.gov/image-article/apod-2010-may-15-the-elusive-jellyfish-nebula/",
+      "source_url": "https://flickr.com/photos/133259498@N05/52705027741/"
     },
     {
       "name": "Iris Nebula",
       "catalog": "NGC 7023",
       "category": "reflection",
-      "fov_degrees": 0.65,
-      "center_j2000": null,
       "filename": "iris-nebula.png",
-      "stellarium_textures": [
-        "n7023.png"
-      ],
       "image_credits": [
         {
-          "short": "NASA",
-          "infoUrl": "https://www.spacetelescope.org/images/heic0915b/"
+          "short": "T.A. Rector/University of Alaska Anchorage, H. Schweiker/WIYN and NOIRLab/NSF/AURA",
+          "infoUrl": "https://noirlab.edu/public/images/noao-ngc7023/"
         }
-      ]
+      ],
+      "image_dimensions": [
+        2200,
+        2020
+      ],
+      "source_type": "external_astronomical_image",
+      "info_url": "https://science.nasa.gov/mission/hubble/science/explore-the-night-sky/hubble-caldwell-catalog/caldwell-4/",
+      "source_url": "https://noirlab.edu/public/images/noao-ngc7023/",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/8/83/Iris_Nebula_NGC_7023_%28noao-ngc7023%29.jpg",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Iris_Nebula_NGC_7023_(noao-ngc7023).jpg",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "Converted to PNG and proportionally downsampled to a 2200-pixel longest edge. Original framing and colours retained."
     },
     {
       "name": "Witch Head Nebula",
       "catalog": "IC 2118",
       "category": "reflection",
-      "fov_degrees": 4.4,
+      "fov_degrees": 3.05,
       "center_j2000": [
-        75.9,
-        -7.8
+        75.7,
+        -7.85
       ],
       "filename": "witch-head-nebula.png",
       "stellarium_textures": [
@@ -569,23 +771,66 @@
         {
           "short": "Zhao Jingna"
         }
-      ]
+      ],
+      "image_dimensions": [
+        1100,
+        1600
+      ],
+      "source_type": "stellarium_screenshot",
+      "capture_application": "Stellarium 26.2",
+      "info_url": "https://www.nasa.gov/image-article/witch-head-nebula/",
+      "source_url": "https://github.com/Stellarium/stellarium/blob/v26.2/nebulae/default/textures.json#L3988",
+      "source_note": "Stellarium texture catalog entry; no original photographer URL was supplied."
     },
     {
       "name": "Running Man Nebula",
       "catalog": "NGC 1977",
       "category": "reflection",
-      "fov_degrees": 0.65,
-      "center_j2000": null,
       "filename": "running-man-nebula.png",
-      "stellarium_textures": [
-        "m42.png"
-      ],
       "image_credits": [
         {
-          "short": "HG731GZ"
+          "short": "W4sm astro",
+          "infoUrl": "https://commons.wikimedia.org/wiki/File:NGC1977_CDK_Large03.jpg"
         }
-      ]
+      ],
+      "image_dimensions": [
+        2200,
+        1760
+      ],
+      "source_type": "external_astronomical_image",
+      "source_url": "https://commons.wikimedia.org/wiki/File:NGC1977_CDK_Large03.jpg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/9/91/NGC1977_CDK_Large03.jpg",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "modifications": "Converted to PNG; images larger than 2200 pixels on their longest edge were proportionally downsampled. Original framing and colours retained.",
+      "info_url": "https://science.nasa.gov/missions/hubble/hubble-witnesses-shock-wave-of-colliding-gases-in-running-man-nebula/"
     }
+  ],
+  "dimensions_note": "Each image has its own dimensions and aspect ratio, recorded below.",
+  "stellarium_capture_settings": {
+    "gui": false,
+    "labels": false,
+    "object_markers": false,
+    "synthetic_stars": false,
+    "mount": "equatorial"
+  },
+  "revision_date": "2026-10-28",
+  "revised_files": [
+    "carina-nebula.png",
+    "cats-eye-nebula.png",
+    "cone-nebula.png",
+    "elephants-trunk-nebula.png",
+    "horsehead-nebula.png",
+    "north-america-nebula.png",
+    "pelican-nebula.png",
+    "rosette-nebula.png",
+    "running-man-nebula.png",
+    "swan-nebula.png",
+    "tarantula-nebula.png",
+    "trifid-nebula.png",
+    "veil-nebula.png",
+    "witch-head-nebula.png",
+    "butterfly-nebula.png",
+    "iris-nebula.png"
   ]
 }

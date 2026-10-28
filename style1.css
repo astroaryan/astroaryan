@@ -13,7 +13,7 @@ table{
     background-image: url('images/beige.png');
 }
 
-#results1, #results2{
+#results1{
     font-family:'Calibri', sans-serif;
     font-size: 2.2em;
     line-height: 1.3em;
@@ -101,7 +101,8 @@ footer{
     text-align:center;
     font-family:'Calibri', sans-serif;
     padding: 5px;
-    font-size: 1.75em;
+    font-size: 1.75rem;
+    line-height: normal;
     color:white;
 
 }
@@ -224,4 +225,155 @@ h6 {
 
 #scorecard{
     font-size: 1.7em;
+}
+
+/* Responsive games page. Keep these rules scoped: Visualizations also uses this stylesheet. */
+.games-page, .games-page * { box-sizing: border-box; }
+.games-page [hidden] { display: none !important; }
+.games-page {
+    margin: 0;
+    color: #fff;
+    font-family: 'Calibri', sans-serif;
+    line-height: 1.5;
+}
+.games-page .games-main {
+    width: min(100% - 32px, 1320px);
+    margin: 0 auto;
+}
+/* Match the shared site's navigation while allowing it to wrap on small screens. */
+.games-page .games-header { margin: 50px 8px 15px; color: black; line-height: normal; }
+.games-page .constellationtext {
+    min-width: 0;
+    margin: 32px 0;
+    padding: clamp(20px, 3vw, 36px);
+    border: 2px solid #ffffff70;
+    border-radius: 8px;
+    background-image: url('images/constellationbackground.png');
+    background-position: center;
+    text-shadow: 0 1px 4px #000;
+    font-size: calc(clamp(1rem, 1.5vw, 1.15rem) + 2pt);
+    line-height: 1.65;
+}
+.games-page .constellationtext p:first-child { margin-top: 0; font-size: calc(clamp(1.2rem, 2vw, 1.5rem) + 2pt); font-weight: bold; }
+.games-page .constellationtext p { margin: 18px 0; max-width: 100ch; }
+.games-page .constellationtext p:last-child { margin-bottom: 0; }
+.games-page #fontforconstellationgame {
+    min-width: 0;
+    margin: 0 0 36px;
+    padding: clamp(18px, 3vw, 40px);
+    border: 3px dotted #ffffffb0;
+    border-radius: 12px;
+    background-image: url('images/constellationbackground2.png');
+    background-position: center;
+    text-shadow: 0 1px 4px #000;
+    line-height: 1.5;
+    word-break: normal;
+}
+.games-page #headingforconstellationgame1 { margin: 0; font-size: clamp(2rem, 4.8vw, 3.3rem); line-height: 1.2; }
+.games-page button { text-shadow: none; font-family: inherit; cursor: pointer; touch-action: manipulation; }
+.games-page :focus-visible { outline: 3px solid #ffe5a2; outline-offset: 4px; }
+.games-page .game-choices { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0 12px; }
+.games-page .game-choice {
+    flex: 1 1 260px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px 20px;
+    border: 4px solid goldenrod;
+    border-radius: 8px;
+    background: #f0e3c2 url('images/beige.png');
+    color: #171421;
+}
+.games-page .game-choice:hover { border-color: lightseagreen; background: #e3efeb; }
+.games-page .game-choice-name { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: bold; }
+.games-page .game-choice-description { font-size: 1.05rem; }
+.games-page #quiz { margin-top: 24px; scroll-margin-top: 16px; }
+.games-page .quiz-progress { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-bottom: 24px; }
+.games-page .quiz-progress p { margin: 0; font-size: 1.05rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+.games-page #round-progress { flex: 1 1 120px; min-width: 0; height: 8px; accent-color: #f4ca70; }
+.games-page .quiz-layout { display: flex; flex-wrap: wrap; align-items: flex-start; gap: clamp(24px, 3vw, 40px); text-align: left; }
+.games-page .quiz-figure { flex: 1.2 1 420px; min-width: 0; margin: 0; }
+.games-page .image-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: clamp(300px, 44vw, 540px);
+    padding: 8px;
+    border: 2px solid #9b8f9d;
+    border-radius: 12px;
+    background: #05070d;
+    text-align: center;
+}
+.games-page #constellationimage1 { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; border: 0; border-radius: 6px; }
+.games-page #image-status { padding: 0 20px; }
+.games-page .image-credit { margin-top: 10px; color: #c9c3d2; font-size: .8rem; line-height: 1.5; overflow-wrap: anywhere; }
+.games-page .image-credit a { color: #ffe5a2; font-weight: bold; text-underline-offset: 3px; }
+.games-page .quiz-answers { flex: 1 1 310px; min-width: 0; padding-top: 8px; }
+.games-page #question-heading { margin: 0 0 24px; font-size: clamp(1.4rem, 2.7vw, 1.9rem); line-height: 1.3; }
+.games-page #answeroptions { display: flex; flex-wrap: wrap; gap: 12px; border: 0; padding: 0; margin: 0; font-size: 1rem; }
+.games-page .answer-option {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+    min-height: 86px;
+    padding: 16px 12px;
+    border: 2px solid #c6a352;
+    border-radius: 8px;
+    background: #eee2c8;
+    color: #191522;
+    font-size: 1.15rem;
+    font-weight: bold;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+}
+.games-page .answer-option:hover:not(:disabled) { border-color: #71d6cb; background: #d9f2ed; }
+.games-page .answer-option:disabled { cursor: default; opacity: .65; }
+.games-page .answer-option.is-correct { opacity: 1; background: #c3f3d5; border-color: #65ce94; color: #103923; }
+.games-page .answer-option.is-correct::after { content: ' ✓'; }
+.games-page .answer-option.is-incorrect { opacity: 1; background: #f6cdcf; border-color: #ef9da5; color: #571622; }
+.games-page .answer-option.is-incorrect::after { content: ' ✕'; }
+.games-page .answer-explanation { min-height: 100px; padding: 18px 0 12px; }
+.games-page #answer-feedback { margin: 0; font-size: 1.15rem; font-weight: bold; }
+.games-page #question-detail { margin: 8px 0 0; color: #d5cfdf; font-size: calc(.95rem + 2pt); }
+.games-page .quiz-button { min-height: 44px; padding: 10px 18px; border: 2px solid #bba572; border-radius: 6px; background: #222437; color: #fff; font-size: 1rem; font-weight: bold; }
+.games-page .quiz-button:hover { border-color: lightseagreen; background: #30354b; }
+.games-page .next-question { width: 100%; background: #e8bd60; border-color: #e8bd60; color: #191522; }
+.games-page .next-question:hover { background: #f4d897; }
+.games-page .quiz-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; padding-top: 24px; border-top: 1px solid #ffffff30; }
+.games-page #restart { margin: 0; padding: 10px 18px; border: 2px solid #bba572; font-size: 1rem; }
+.games-page #scorecard { font-size: 1.05rem; }
+.games-page .game-results { padding: 20px 0 0; }
+.games-page .game-results h2 { margin: 0 0 12px; font-size: 1.65rem; }
+.games-page #results1 { margin: 8px 0; font-size: 1.15rem; line-height: 1.5; }
+.games-page .social-links { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.games-page .social-links a { display: inline-flex; align-items: center; min-height: 48px; }
+.games-page .social-links img { max-width: 100%; height: auto; }
+
+@media (max-width: 1050px) {
+    .games-page .games-header { margin-top: 20px; }
+    .games-page .games-header table { display: block; margin-top: 0; border: 0; padding: 13px; background: goldenrod; font-size: clamp(1.25rem, 2.5vw, 2rem); }
+    .games-page .games-header tbody { display: block; }
+    .games-page .games-header tr { display: flex; flex-wrap: wrap; gap: 13px; }
+    .games-page .games-header td { display: flex; flex: 1 1 120px; align-items: center; justify-content: center; min-width: 0; border: 0; padding: 20px; background-image: url('images/beige.png'); }
+}
+@media (max-width: 900px) {
+    .games-page .quiz-layout { flex-direction: column; }
+    .games-page .quiz-figure, .games-page .quiz-answers { flex-basis: auto; width: 100%; }
+    .games-page .image-stage { height: clamp(260px, 65vw, 480px); }
+    .games-page .quiz-answers { padding-top: 0; }
+}
+@media (max-width: 480px) {
+    .games-page .games-main { width: calc(100% - 20px); }
+    .games-page .constellationtext { margin: 20px 0; padding: 18px; }
+    .games-page #fontforconstellationgame { padding: 18px 12px; }
+    .games-page .game-choices { gap: 14px; }
+    .games-page .game-choice { padding: 24px 14px; }
+    .games-page .quiz-progress { gap: 10px; }
+    .games-page #round-progress { order: 3; flex-basis: 100%; }
+    .games-page #scorecard { margin-left: auto; }
+    .games-page .answer-option { padding: 12px 8px; font-size: 1rem; }
+    .games-page .quiz-actions .quiz-button { flex: 1 1 120px; }
 }

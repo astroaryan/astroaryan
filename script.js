@@ -1,159 +1,173 @@
-const zeasy1 = document.getElementById("zeasy1");
-const zeightyeight1 = document.getElementById("zeightyeight1");
-const zhard1 = document.getElementById("zhard1");
-const clickbelow = document.getElementById("clickbelow");
-const restart = document.getElementById("restart");
-const disappear = document.getElementById("disappear");
-const disappear1 = document.getElementById("disappear1");
-scorecounter=0;
-denominator=0;
-//const answeroption1 = document.getElementById("answeroption1");
-//const answeroption2 = document.getElementById("answeroption2");
-//const answeroption3 = document.getElementById("answeroption3");
-//const answeroption4 = document.getElementById("answeroption4");
+const zodiacNames = ["Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio"];
+const zodiacQuestions = zodiacNames.map(name => ({ name, image: "constellations/" + name.toLowerCase() + ".png" }));
+const games = {
+    zodiac: { title: "Western Zodiac", subject: "constellation", questions: zodiacQuestions },
+    nebula: { title: "Nebula Game", subject: "nebula", questions: nebulaQuestions }
+};
+const quiz = document.getElementById("quiz");
+const gameChoices = document.getElementById("game-choices");
+const gameHeading = document.getElementById("headingforconstellationgame1");
+const results = document.getElementById("resultstab");
+const questionHeading = document.getElementById("question-heading");
+const questionCounter = document.getElementById("question-counter");
+const roundProgress = document.getElementById("round-progress");
+const scorecard = document.getElementById("scorecard");
+const questionImage = document.getElementById("constellationimage1");
+const imageStage = document.querySelector(".image-stage");
+const imageStatus = document.getElementById("image-status");
+const imageCredit = document.getElementById("image-credit");
+const retryImage = document.getElementById("retry-image");
+const answerButtons = [...document.querySelectorAll(".answer-option")];
+const answerFeedback = document.getElementById("answer-feedback");
+const questionDetail = document.getElementById("question-detail");
+const nextQuestion = document.getElementById("next-question");
+let activeGame = "zodiac";
+let round = [];
+let questionIndex = 0;
+let score = 0;
+let answered = false;
+let imageReady = false;
+let questionVersion = 0;
 
-
-zeasy1.addEventListener("click",startQuiz);
-restart.addEventListener("click",restartquiz);
-//answeroption1.addEventListener("click",checkanswer);
-//answeroption2.addEventListener("click",checkanswer);
-//answeroption3.addEventListener("click",checkanswer);
-//answeroption4.addEventListener("click",checkanswer);
-
-
-const images=["constellations/sagittarius.png","constellations/capricorn.png","constellations/aquarius.png","constellations/pisces.png",
-"constellations/aries.png","constellations/taurus.png","constellations/gemini.png","constellations/cancer.png","constellations/leo.png","constellations/virgo.png",
-"constellations/libra.png","constellations/scorpio.png"]
-const possibleAnswers=['Sagittarius','Capricorn','Aquarius','Pisces','Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio']
-
-
-
-function render(){
-    
-    //change text items
-    correctanswer = Math.floor(Math.random() * 4);
-    arr1 = myRandomInts(4, 11);
-
-    integer = arr1[0];
-    a = arr1[1];
-    b = arr1[2];
-    c = arr1[3];
-
-    document.getElementById('constellationimage1').src = images[integer]; //this is the image we display, so it's the correct answer
-    //these if statements determine which of our answer choices will be our right answer, so there's a lot of randomization
-    if (correctanswer == 0){ 
-        document.getElementById('answeroption1').innerHTML = possibleAnswers[integer];
-        document.getElementById('answeroption2').innerHTML = possibleAnswers[a];
-        document.getElementById('answeroption3').innerHTML = possibleAnswers[b];
-        document.getElementById('answeroption4').innerHTML = possibleAnswers[c];
+document.getElementById("nebula-description").textContent = "12 questions from " + nebulaQuestions.length + " named nebulae";
+document.querySelectorAll("[data-game]").forEach(button => button.addEventListener("click", () => startQuiz(button.dataset.game)));
+answerButtons.forEach(button => button.addEventListener("click", () => checkAnswer(button)));
+document.getElementById("restart").addEventListener("click", () => startQuiz(activeGame));
+document.getElementById("change-game").addEventListener("click", chooseGame);
+retryImage.addEventListener("click", renderQuestion);
+nextQuestion.addEventListener("click", () => {
+    if (!answered) return;
+    questionIndex += 1;
+    if (questionIndex === round.length) finishQuiz();
+    else {
+        renderQuestion();
+        quiz.scrollIntoView({ block: "start" });
     }
-    if (correctanswer == 1){
-        document.getElementById('answeroption2').innerHTML = possibleAnswers[integer];
-        document.getElementById('answeroption1').innerHTML = possibleAnswers[a];
-        document.getElementById('answeroption3').innerHTML = possibleAnswers[b];
-        document.getElementById('answeroption4').innerHTML = possibleAnswers[c];
-    }
+});
 
-    if (correctanswer == 2){
-        document.getElementById('answeroption3').innerHTML = possibleAnswers[integer];
-        document.getElementById('answeroption1').innerHTML = possibleAnswers[a];
-        document.getElementById('answeroption2').innerHTML = possibleAnswers[b];
-        document.getElementById('answeroption4').innerHTML = possibleAnswers[c];
+function shuffle(items) {
+    const shuffled = [...items];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
     }
-
-    if (correctanswer == 3){
-        document.getElementById('answeroption4').innerHTML = possibleAnswers[integer];
-        document.getElementById('answeroption1').innerHTML = possibleAnswers[a];
-        document.getElementById('answeroption2').innerHTML = possibleAnswers[b];
-        document.getElementById('answeroption3').innerHTML = possibleAnswers[c];
-    }
+    return shuffled;
 }
 
-
-
-
-function checkAnswer(answer){
-    if(answer=='A' && correctanswer==0){
-        scorecounter=scorecounter+1;
-    }
-
-    if(answer=='B' && correctanswer==1){
-        scorecounter=scorecounter+1;
-    }
-
-    if(answer=='C' && correctanswer==2){
-        scorecounter=scorecounter+1;
-    }
-
-    if(answer=='D' && correctanswer==3){
-        scorecounter=scorecounter+1;
-    }
-
-    denominator=denominator+1;
-    string = 'score'
-    document.getElementById('scorecard').innerHTML = 'Score:' + ' ' + scorecounter + '/' + denominator;
-    if (denominator==12){
-        zeasy1.style.display = "revert";
-        zeightyeight1.style.display = "revert";
-        zhard1.style.display = "revert";
-        disappear.style.display = "revert"
-        disappear1.style.display = "revert"
-        quiz.style.display = "none";
-        resultstab.style.display = "block";
-        if (scorecounter==1){
-        document.getElementById('results1').innerHTML = 'Nice try. You scored ' + scorecounter + ' point. Maybe you should study...';
-        }
-        else if (scorecounter>=9){
-        document.getElementById('results1').innerHTML = 'Excellent! You scored ' + scorecounter + ' points. You must be an astronomer!';
-        }
-        else if (scorecounter>=6){
-            document.getElementById('results1').innerHTML = 'Great Job! You scored ' + scorecounter + " points. You are pretty good!";
-        }
-        else if (scorecounter>=3){
-            document.getElementById('results1').innerHTML = 'Good Job! You scored ' + scorecounter + ' points. You are learning well!';
-        }else{
-            document.getElementById('results1').innerHTML = 'Nice try. You scored ' + scorecounter + ' points. Maybe you should study...';
-        }
-    } else{render();}
+function startQuiz(game) {
+    activeGame = game;
+    round = shuffle(games[game].questions).slice(0, 12);
+    questionIndex = 0;
+    score = 0;
+    gameHeading.textContent = games[game].title;
+    gameChoices.hidden = true;
+    results.hidden = true;
+    quiz.hidden = false;
+    roundProgress.max = round.length;
+    renderQuestion();
+    quiz.scrollIntoView({ block: "start" });
 }
 
-
-function myRandomInts(quantity, max){
-    const arr = []
-    while(arr.length < quantity){
-      var candidateInt = Math.floor(Math.random() * max) + 1;
-      if(arr.indexOf(candidateInt) === -1) arr.push(candidateInt);
-    }
-  return(arr)
+function renderQuestion() {
+    const game = games[activeGame];
+    const question = round[questionIndex];
+    const version = ++questionVersion;
+    const distractors = shuffle(game.questions.filter(item => item.name !== question.name)).slice(0, 3);
+    const choices = shuffle([question, ...distractors]);
+    answered = false;
+    imageReady = false;
+    questionHeading.textContent = "Which " + game.subject + " is in the image?";
+    questionCounter.textContent = "Question " + (questionIndex + 1) + " of " + round.length;
+    roundProgress.value = questionIndex;
+    scorecard.textContent = "Score: " + score + " / " + questionIndex;
+    answerFeedback.textContent = "";
+    questionDetail.textContent = "";
+    nextQuestion.hidden = true;
+    answerButtons.forEach((button, index) => {
+        button.textContent = choices[index].name;
+        button.className = "answer-option";
+        button.removeAttribute("aria-label");
+        button.disabled = true;
+    });
+    questionImage.hidden = true;
+    questionImage.alt = "Identify the " + game.subject + " in question " + (questionIndex + 1);
+    imageStage.setAttribute("aria-busy", "true");
+    imageStatus.textContent = "Loading image…";
+    imageStatus.hidden = false;
+    retryImage.hidden = true;
+    renderImageSource(question);
+    questionImage.onload = () => {
+        if (version !== questionVersion) return;
+        imageReady = true;
+        questionImage.hidden = false;
+        imageStatus.hidden = true;
+        imageStage.setAttribute("aria-busy", "false");
+        answerButtons.forEach(button => { button.disabled = false; });
+    };
+    questionImage.onerror = () => {
+        if (version !== questionVersion) return;
+        imageStatus.textContent = "This image couldn't load. Try again to continue.";
+        imageStage.setAttribute("aria-busy", "false");
+        retryImage.hidden = false;
+    };
+    questionImage.src = question.image;
+    questionHeading.focus({ preventScroll: true });
 }
 
-
-function startQuiz(){
-    zeasy1.style.display = "none";
-    zeightyeight1.style.display = "none";
-    zhard1.style.display = "none";
-    clickbelow.style.display = "none";
-    disappear.style.display = "none"
-    disappear1.style.display = "none"
-    quiz.style.display = "block";
-    resultstab.style.display = "none";
-    document.getElementById('headingforconstellationgame1').innerHTML = 'Zodiac Constellations Quiz';
-    denominator=0;
-    scorecounter=0;
-    document.getElementById('scorecard').innerHTML = 'Score: Nothing yet!';
-
-    render();
+function renderImageSource(question) {
+    imageCredit.replaceChildren();
+    imageCredit.hidden = !question.sourceUrl;
+    if (!question.sourceUrl) return;
+    const link = document.createElement("a");
+    link.textContent = "Image Source";
+    link.href = question.sourceUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    imageCredit.append(link);
 }
 
-function restartquiz(){
-    zeasy1.style.display = "revert";
-    zeightyeight1.style.display = "revert";
-    zhard1.style.display = "revert";
-    clickbelow.style.display = "revert";
-    disappear.style.display = "revert"
-    disappear1.style.display = "revert"
-    quiz.style.display = "none";
-    resultstab.style.display = "none";
+function checkAnswer(selectedButton) {
+    if (answered || !imageReady) return;
+    answered = true;
+    const question = round[questionIndex];
+    const correct = selectedButton.textContent === question.name;
+    if (correct) score += 1;
+    answerButtons.forEach(button => {
+        button.disabled = true;
+        if (button.textContent === question.name) {
+            button.classList.add("is-correct");
+            button.setAttribute("aria-label", question.name + " — correct answer");
+        } else if (button === selectedButton) {
+            button.classList.add("is-incorrect");
+            button.setAttribute("aria-label", button.textContent + " — incorrect answer");
+        }
+    });
+    answerFeedback.textContent = correct ? "Correct! This is " + question.name + "." : "Not quite. This is " + question.name + ".";
+    questionDetail.textContent = [question.catalog, question.type, question.aliases?.length ? "Also called " + question.aliases.join(" or ") : ""].filter(Boolean).join(" · ");
+    questionImage.alt = question.name;
+    scorecard.textContent = "Score: " + score + " / " + (questionIndex + 1);
+    roundProgress.value = questionIndex + 1;
+    nextQuestion.textContent = questionIndex === round.length - 1 ? "See results" : "Next question";
+    nextQuestion.hidden = false;
+    nextQuestion.focus({ preventScroll: true });
+}
 
-    document.getElementById('headingforconstellationgame1').innerHTML = 'Constellation Quizzes';
+function chooseGame() {
+    questionVersion += 1;
+    imageReady = false;
+    questionImage.onload = null;
+    questionImage.onerror = null;
+    questionImage.removeAttribute("src");
+    quiz.hidden = true;
+    results.hidden = true;
+    gameChoices.hidden = false;
+    gameHeading.textContent = "Astronomy Games";
+    document.querySelector('[data-game="' + activeGame + '"]').focus();
+}
+
+function finishQuiz() {
+    chooseGame();
+    results.hidden = false;
+    document.getElementById("results1").textContent = games[activeGame].title + ": " + score + " / " + round.length;
+    document.getElementById("results-heading").focus();
 }
