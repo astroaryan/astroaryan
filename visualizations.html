@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Visualizations</title>
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="visualizations/visualizations.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+    <script src="variables.js" defer></script>
+    <script src="visualizations/colormaps.js" defer></script>
+    <script src="visualizations/physics.js" defer></script>
+    <script src="visualizations/controls.js" defer></script>
+    <script src="visualizations/planet-equilibrium-temperature.js" defer></script>
+    <script src="visualizations/blackbody.js" defer></script>
+  </head>
+<body>
+  <div class="header1">
+    <table class="header1">
+      <tr>
+        <td > <a href="https://physics2astro.org/"> P2A </a> </td>
+        <td > <a href="constellations.html"> Constellation Games</a> </td>
+        <td><a href="visualizations.html" aria-current="page"> Visualizations</a> </td>
+        <td><a href="resources.html"> Astronomy Resources</a> </td>
+        <td><a href="index.html"> About</a> </td>
+      </tr>
+    </table>
+  </div>
+
+  <main id="fontforconstellationgame" class="visualizations-panel" aria-labelledby="visualizations-heading">
+    <h1 id="visualizations-heading" class="headingforconstellatiomgame">Visualizations</h1>
+    <noscript><p>Enable JavaScript to use the interactive diagrams and controls.</p></noscript>
+
+    <section id="planet-equilibrium" class="visualization" aria-labelledby="planet-heading">
+      <h2 id="planet-heading">Planet equilibrium temperature</h2>
+      <p class="viz-intro">How warm is a planet? Change its star, orbit, and reflectivity to explore.</p>
+      <div class="mode-controls" role="group" aria-label="Orbit type">
+        <button type="button" data-orbit="circular" aria-pressed="true">Circular orbit</button>
+        <button type="button" data-orbit="eccentric" aria-pressed="false">Eccentric orbit</button>
+      </div>
+      <div class="viz-layout">
+        <div class="viz-controls" id="planet-controls" aria-label="Planet parameters"></div>
+        <div class="viz-display">
+          <h3 id="planet-result" class="viz-result"></h3>
+          <p id="planet-star-summary" class="viz-summary"></p>
+          <svg id="planet-diagram" class="planet-diagram" viewBox="0 0 550 440" role="group" aria-labelledby="planet-svg-title planet-svg-description">
+            <title id="planet-svg-title">Planet equilibrium temperature diagram</title>
+            <desc id="planet-svg-description">A representative star and orbit. Drag the planet or use the labelled sliders to change the system.</desc>
+          </svg>
+          <p id="planet-parameters" class="viz-summary"></p>
+          <p id="planet-status" class="viz-status" role="status"></p>
+          <p id="planet-help" class="viz-help">Drag the planet left or right to change its distance. You can also use the sliders or enter exact values.</p>
+          <div class="viz-actions">
+            <button type="button" id="planet-play" aria-pressed="false" hidden>Play orbit</button>
+            <button type="button" id="planet-reset">Reset planet</button>
+          </div>
+          <p id="planet-playback-note" class="viz-help" hidden>Playback: 12 seconds per orbit, with Keplerian relative speed. Time is illustrative.</p>
+        </div>
+      </div>
+      <p class="viz-equation">T<sub>eq</sub> = T<sub>★</sub> √(R<sub>★</sub> / 2r) (1 − A<sub>B</sub>)<sup>¼</sup></p>
+      <p class="viz-help">Zero internal heating · uniform heat redistribution · no greenhouse effect or thermal lag. Drawing sizes are representative; orbital spacing is logarithmically compressed.</p>
+    </section>
+
+    <section id="blackbody" class="visualization" aria-labelledby="blackbody-heading">
+      <h2 id="blackbody-heading">Blackbody spectrum</h2>
+      <p class="viz-intro">Explore the surface spectral flux of a blackbody as its temperature changes.</p>
+      <div class="viz-layout">
+        <div class="viz-controls">
+          <div id="blackbody-controls"></div>
+          <button type="button" id="blackbody-reset">Reset spectrum</button>
+          <p class="viz-help">Adjust the slider or enter an exact temperature. The wavelength and flux axes rescale with temperature.</p>
+        </div>
+        <div class="viz-display">
+          <h3 id="blackbody-result" class="viz-result"></h3>
+          <svg id="blackbody-diagram" class="blackbody-diagram" viewBox="0 0 800 500" role="img" aria-labelledby="blackbody-svg-title blackbody-svg-description">
+            <title id="blackbody-svg-title">Blackbody surface spectral flux</title>
+            <desc id="blackbody-svg-description">Planck's law, with wavelength in micrometres and surface spectral flux in watts per square metre per micrometre.</desc>
+          </svg>
+          <p id="blackbody-peak" class="viz-summary" role="status"></p>
+          <p class="viz-help">Surface spectral flux F<sub>λ</sub> [W m<sup>−2</sup> μm<sup>−1</sup>]</p>
+        </div>
+      </div>
+      <p class="viz-equation">F<sub>λ</sub> = πB<sub>λ</sub> &nbsp; · &nbsp; λ<sub>peak</sub> = 2897.8 / T &nbsp; [μm]</p>
+      <p class="viz-help">Curve colour approximates the blackbody's visible colour. Brightness is normalized and colours outside the display gamut are clipped; very cool blackbodies emit almost no visible light.</p>
+    </section>
+  </main>
+
+  <div>
+    <footer>
+      <h4> Hi, I'm Aryan. I'm a college student interested in astrophysics and STEM outreach.</h4>
+      <h4 id="connectwithme">Connect with me! </h4>
+      <h4 id="socialmediahandles">
+        <a href="https://www.linkedin.com/in/aryan-gupta448/" target="_blank"><img src="images/linkedin.png" width="44px" alt="My LinkedIn Account" /></a>
+        <a href="https://www.instagram.com/astroaryang/" target="_blank"><img src="images/instagram.png" width="44px" alt="My Instagram Account" /></a>
+        <a href="mailto:" data-contact-email target="_blank"><img src="images/gmail.png" width="50px" alt="Email me"/> </a>
+      </h4>
+    </footer>
+  </div>
+</body>
+</html>

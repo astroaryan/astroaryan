@@ -108,3 +108,14 @@ margin-left: 50px
 .about1{
     margin-right: 50px;
 }
+
+
+.list a {
+    color: #FFD166; /* Gold: unvisited */
+}
+.list a:visited {
+    color: #D8B4FE; /* Light lavender: visited */
+}
+.list a:hover, .list a:focus-visible {
+    color: #FFE8A3; /* Pale gold: hover or keyboard focus */
+}

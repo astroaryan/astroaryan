@@ -1,0 +1,19 @@
+Research profile logo sources
+
+ADS logo: SAO/NASA Astrophysics Data System. Unmodified.
+Source: https://prod.adsabs.harvard.edu/help/img/bbb_assets/ads_partial_logo_dark_background.svg
+License: Creative Commons Attribution 4.0 International, https://creativecommons.org/licenses/by/4.0/
+Logo information: https://prod.adsabs.harvard.edu/help/logos/
+
+ORCID iD logo: ORCID. Unmodified.
+Source: https://orcid.org/assets/vectors/orcid.logo.icon.svg
+Brand information: https://info.orcid.org/brand-guidelines/
+
+Google Scholar icon: Simple Icons; displayed with a #4285F4 fill.
+Source: https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/googlescholar.svg
+Project license: CC0 1.0, https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md
+Google Scholar is a trademark of Google.
+
+GitHub Invertocat logo: GitHub. Unmodified white version.
+Source: GitHub Logos/SVG/GitHub_Invertocat_White.svg from https://brand.github.com/GitHub_Logos.zip
+Brand information: https://brand.github.com/foundations/logo

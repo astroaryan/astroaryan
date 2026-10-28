@@ -7,6 +7,207 @@
     <title>Astro Aryan</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+    <script src="variables.js" defer></script>
+    <style>
+      #content.about-layout {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 2rem;
+        padding: 2rem;
+        min-width: 0;
+        line-height: 1.5;
+      }
+      .about-copy {
+        flex: 1;
+        min-width: 0;
+      }
+      .about-copy h1 {
+        margin-top: 0;
+        line-height: 1.2;
+      }
+      .research-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 32px;
+        max-width: 460px;
+        margin: 4.5em auto 0;
+        padding: 0;
+        list-style: none;
+        text-align: center;
+        font-size: 0.9em;
+      }
+      .research-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #FFD166;
+        text-underline-offset: 3px;
+      }
+      .research-links a:visited {
+        color: #D8B4FE;
+      }
+      .research-links a:hover, .research-links a:focus-visible {
+        color: #FFE8A3;
+      }
+      .research-links img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+      .research-links small {
+        display: block;
+        margin-top: 6px;
+        color: #E6E6E6;
+        font-size: 0.8em;
+      }
+      .about-photo {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        text-align: center;
+      }
+      .about-photo img {
+        display: block;
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #101827;
+      }
+      .photo-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 10px;
+      }
+      .photo-controls button {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: #B8B8B8;
+        font: inherit;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      .photo-controls button:hover, .photo-controls button:focus-visible {
+        color: #FFD166;
+      }
+      .photo-controls button:focus-visible {
+        outline: 2px solid #FFD166;
+        outline-offset: 2px;
+      }
+      .about-photo figcaption {
+        margin-top: 6px;
+        font-size: 0.8em;
+      }
+
+      .brown-dwarf-section {
+        margin: 2rem 50px 0;
+        padding: 2rem;
+        background: #101827;
+        color: white;
+        font-family: 'Calibri', sans-serif;
+        font-size: 1.15rem;
+        line-height: 1.6;
+      }
+      .brown-dwarf-section h2 {
+        margin: 0 0 1.5rem;
+        color: #FFD166;
+        font-size: 1.8rem;
+        line-height: 1.25;
+      }
+      .brown-dwarf-layout {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+      .research-gallery, .brown-dwarf-copy {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+      }
+      .research-gallery {
+        text-align: center;
+      }
+      .research-gallery img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 11;
+        object-fit: contain;
+        border-radius: 12px;
+        background: white;
+      }
+      .research-gallery a:focus-visible {
+        display: block;
+        outline: 2px solid #FFD166;
+        outline-offset: 4px;
+      }
+      .research-gallery figcaption {
+        margin-top: 6px;
+        font-size: 0.85em;
+      }
+      .research-gallery small {
+        display: block;
+        margin-top: 6px;
+        color: #B8B8B8;
+      }
+      .brown-dwarf-copy p:first-child {
+        margin-top: 0;
+      }
+      .brown-dwarf-copy p:last-child {
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 760px) {
+        #content.about-layout {
+          flex-direction: column;
+          margin: 0 12px;
+          padding: 20px;
+        }
+        .about-photo {
+          width: 100%;
+          max-width: 360px;
+          align-self: center;
+        }
+        .research-links {
+          column-gap: 16px;
+          margin-top: 3em;
+        }
+        .research-links a {
+          flex-direction: column;
+          gap: 6px;
+        }
+        .brown-dwarf-section {
+          margin: 24px 12px 0;
+          padding: 20px;
+        }
+        .brown-dwarf-layout {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .research-gallery {
+          width: 100%;
+        }
+        table.header1 {
+          width: 100%;
+          table-layout: fixed;
+          font-size: 1rem;
+        }
+        table.header1 td {
+          padding: 8px;
+          overflow-wrap: anywhere;
+        }
+      }
+    </style>
   </head>
 
 <body>
@@ -17,7 +218,8 @@
       <table class="header1"> 
         <tr> 
           <td > <a href="https://physics2astro.org/"> P2A </a> </td>
-          <td > <a href="constellations.html"> Learn the Constellations</a> </td>
+          <td > <a href="constellations.html"> Constellation Games</a> </td>
+          <td><a href="visualizations.html"> Visualizations</a> </td>
           <td><a href="resources.html"> Astronomy Resources</a> </td>
           <td><a href="index.html"> About</a> </td>
 
@@ -28,32 +230,65 @@
   <!-- Write your comments here -->
   <!-- Write your comments here -->
 
-  <div id="content">
-
-  <br>
-  <h3 class="about about1"> Hi there! This website serves as a portfolio for my experiences in astronomy. I am a 19-year-old who enjoys snowboarding, piano, and reading. Besides me, my family includes my parents, my older brother, and a small shoodle named Snowball.</h1>
-
-    <div class='mydogs'> 
-  <!--  <img src="images/mydogs.jpg" alt="My two puppies"> --> 
+  <main id="content" class="about-layout">
+    <div class="about-copy">
+      <h1>Hi there!</h1>
+      <p>My name is Aryan Gupta, and I'm a senior at Princeton University studying Astrophysics with a minor in Statistics and Machine Learning. This website serves as a personal portfolio of my work. I'm always happy to chat if you'd like to reach out!</p>
+      <!-- Logo sources and credits: images/research-logo-sources.txt -->
+      <ul class="research-links" aria-label="Research profiles">
+        <li>
+          <a href="https://ui.adsabs.harvard.edu/search/fl=identifier%2C%5Bcitations%5D%2Cabstract%2Cauthor%2Cauthor_count%2Cbook_author%2Corcid_pub%2Cpublisher%2Corcid_user%2Corcid_other%2Cbibcode%2Ccitation_count%2Ccomment%2Cdoi%2Cid%2Ckeyword%2Cpage%2Cproperty%2Cpub%2Cpub_raw%2Cpubdate%2Cpubnote%2Cread_count%2Ctitle%2Cvolume%2Cdatabase%2Clinks_data%2Cesources%2Cdata%2Ccitation_count_norm%2Cemail%2Cdoctype%2C%5Bfields%20author%3D3%5D%2C%5Bfields%20aff%3D3%5D%2C%5Bfields%20orcid_pub%3D3%5D%2C%5Bfields%20orcid_user%3D3%5D%2C%5Bfields%20orcid_other%3D3%5D&amp;fq=%7B!type%3Daqp%20v%3D%24fq_database%7D&amp;fq_database=(database%3Aastronomy%20OR%20database%3Aphysics)&amp;q=orcid%3A0009-0002-3373-9891&amp;rows=25&amp;sort=date%20desc%2C%20bibcode%20desc&amp;start=0&amp;ui_tag=results%2Fprimary&amp;p_=0" target="_blank" rel="noopener noreferrer"><img src="images/ads.svg" alt=""><span>ADS</span></a>
+          <small>Astrophysics papers</small>
+        </li>
+        <li>
+          <a href="https://orcid.org/0009-0002-3373-9891" target="_blank" rel="noopener noreferrer"><img src="images/orcid.svg" alt=""><span>ORCID</span></a>
+          <small>Researcher identifier</small>
+        </li>
+        <li>
+          <a href="https://scholar.google.com/citations?user=ZcmRWksAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer"><img src="images/google-scholar.svg" alt=""><span>Google Scholar</span></a>
+          <small>Publications &amp; citations</small>
+        </li>
+        <li>
+          <a href="https://github.com/astroaryan" target="_blank" rel="noopener noreferrer"><img src="images/github.svg" alt=""><span>GitHub</span></a>
+          <small>Code &amp; projects</small>
+        </li>
+      </ul>
     </div>
+    <figure class="about-photo">
+      <img id="about-image" src="images/about_photo.png" alt="Group photo by the JPL sign.">
+      <div class="photo-controls">
+        <button type="button" data-direction="-1" aria-label="Previous photo">&larr;</button>
+        <span id="photo-count">1 / 2</span>
+        <button type="button" data-direction="1" aria-label="Next photo">&rarr;</button>
+      </div>
+      <figcaption id="photo-caption" aria-live="polite">Group photo by the JPL sign.</figcaption>
+    </figure>
+  </main>
 
-  <h3 class="about"> If excruciatingly bored, my personal life can be detailed <a href="https://aryportfolio.weebly.com/">here</a>.</h3>
+  <section id="brown-dwarf-research" class="brown-dwarf-section" aria-labelledby="brown-dwarf-title">
+    <h2 id="brown-dwarf-title">Brown Dwarf Secondary Eclipses</h2>
+    <div class="brown-dwarf-layout">
+      <!-- Figure sources and extraction details: research/brown-dwarf-sources.txt -->
+      <figure class="research-gallery">
+        <a id="research-image-link" href="research/brown-dwarf-cover.svg" target="_blank" rel="noopener noreferrer" aria-label="Open current research image full size (new tab)">
+          <img id="research-image" src="research/brown-dwarf-cover.svg" alt="A brown dwarf illustration beside two stacked light curves showing AD 3116B disappearing behind its star." loading="lazy">
+        </a>
+        <div class="photo-controls">
+          <button type="button" data-direction="-1" aria-label="Previous research image">&larr;</button>
+          <span id="research-photo-count">1 / 3</span>
+          <button type="button" data-direction="1" aria-label="Next research image">&rarr;</button>
+        </div>
+        <figcaption id="research-photo-caption" aria-live="polite">An artist's illustration beside AD 3116B's two Palomar eclipses, observed on March 21 and 23, 2026 (Figure 3e–f).</figcaption>
+        <small>Click the image to view it full size.</small>
+      </figure>
+      <div class="brown-dwarf-copy">
+        <p>We studied two transiting brown dwarfs, <strong>LP 261-75C</strong> and <strong>AD 3116B</strong>, using the 200-inch Hale Telescope at Palomar Observatory. Brown dwarfs have roughly 13–80 times Jupiter's mass, too little to sustain hydrogen fusion like a star. These two orbit their host stars about every two days; each star is roughly five times more massive than its companion.</p>
+        <p>A transit happens when a brown dwarf crosses in front of its star from our viewpoint. When it passes behind the star, we see a <strong>secondary eclipse</strong>: a small dip in the system's light as the brown dwarf disappears from view.</p>
+        <p>We used these dips to estimate how brightly the brown dwarfs glow. Because brown dwarfs cool as they age, comparing our measurements with cooling models lets us estimate the ages of their systems. The models suggest <strong>0.4–1.3 billion years for AD 3116B</strong> and <strong>1.3–2.9 billion years for LP 261-75C</strong>, with the ranges reflecting differences between models.</p>
+      </div>
+    </div>
+  </section>
 
-  <h3 class = 'about'> Click <a href="research.html"> here </a> to see my astronomy research page. Besides research, I'm currently a Docent at Palomar Observatory and an outreach member of the Temecula Valley Astronomers. 
-    
-  <h4 class="about"> Astronomy Awards</h4>
-  <ul id="no"> 
-  <li class="about"> USAAAO Qualifier (Top 15% of participants).</li>
-  <li class="about"> IAAC Gold (Top 1% of competitors).</li>
-  <li class="about"> 2nd in Southern California's State Science Olympiad Competition.</li>
-  <li class="about"> 1st in regionals in Science Olympiad Competitions.</li>
-  <li class="about"> 20 medals earned in Science Olympiad competitions.</li>
-  <li class="about"> Stellar Outreach Award (through the Temecula Valley Astronomers).</li>
-
-  </ul>
-  <br>
-
-  </div>
 
 
 
@@ -67,8 +302,9 @@
         <h4 id="connectwithme">Connect with me! </h4>
         <h4 id="socialmediahandles">
           <a href="https://www.linkedin.com/in/aryan-gupta448/" target="_blank"><img src="images/linkedin.png" width="44px" alt="My LinkedIn Account" /></a>
-          <a href="https://www.youtube.com/c/redauraforlife" target="_blank"><img src="images/youtube.png" width="78px" alt="My YouTube Account" /></a>
-          <a href="mailto:ary2027gupta@gmail.com" target="_blank"><img src="images/gmail.png" width="50px" alt="Email me"/> </a>
+          <!-- <a href="https://www.youtube.com/c/redauraforlife" target="_blank"><img src="images/youtube.png" width="78px" alt="My YouTube Account" /></a> -->
+          <a href="https://www.instagram.com/astroaryang/" target="_blank"><img src="images/instagram.png" width="44px" alt="My Instagram Account" /></a>
+          <a href="mailto:" data-contact-email target="_blank"><img src="images/gmail.png" width="50px" alt="Email me"/> </a>
 
         </h4>
       </footer>
@@ -81,6 +317,45 @@
 
 
 
+<script>
+  const aboutPhotos = [
+    { src: "images/about_photo.png", caption: "Group photo by the JPL sign." },
+    { src: "images/selfie.jpg", caption: "At the American Astronomical Society display." }
+  ];
+  let currentPhoto = 0;
+
+  document.querySelectorAll(".about-photo .photo-controls button").forEach(button => {
+    button.addEventListener("click", () => {
+      currentPhoto = (currentPhoto + Number(button.dataset.direction) + aboutPhotos.length) % aboutPhotos.length;
+      const photo = aboutPhotos[currentPhoto];
+      const image = document.getElementById("about-image");
+      image.src = photo.src;
+      image.alt = photo.caption;
+      document.getElementById("photo-count").textContent = `${currentPhoto + 1} / ${aboutPhotos.length}`;
+      document.getElementById("photo-caption").textContent = photo.caption;
+    });
+  });
+
+  const researchPhotos = [
+    { src: "research/brown-dwarf-cover.svg", alt: "A brown dwarf illustration beside two stacked light curves showing AD 3116B disappearing behind its star.", caption: "An artist's illustration beside AD 3116B's two Palomar eclipses, observed on March 21 and 23, 2026 (Figure 3e–f)." },
+    { src: "research/brown-dwarf-figure-7.png", alt: "Three panels showing LP 261-75C's temperature constraints, cooling tracks, and age distributions.", caption: "From temperature to age: cooling models help estimate the age of LP 261-75C (Figure 7)." },
+    { src: "research/brown-dwarf-figure-3.png", alt: "Six panels showing AD 3116B's transits, radial velocities, and secondary eclipses.", caption: "The full picture for AD 3116B: transits, stellar motion, and secondary eclipses fitted together (Figure 3)." }
+  ];
+  let currentResearchPhoto = 0;
+
+  document.querySelectorAll(".research-gallery .photo-controls button").forEach(button => {
+    button.addEventListener("click", () => {
+      currentResearchPhoto = (currentResearchPhoto + Number(button.dataset.direction) + researchPhotos.length) % researchPhotos.length;
+      const photo = researchPhotos[currentResearchPhoto];
+      const image = document.getElementById("research-image");
+      image.src = photo.src;
+      image.alt = photo.alt;
+      document.getElementById("research-image-link").href = photo.src;
+      document.getElementById("research-photo-count").textContent = `${currentResearchPhoto + 1} / ${researchPhotos.length}`;
+      document.getElementById("research-photo-caption").textContent = photo.caption;
+    });
+  });
+</script>
 </body>
 
 
