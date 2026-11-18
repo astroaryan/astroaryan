@@ -154,7 +154,7 @@ window.AstroVisuals = (() => {
     const wholeKelvin = value => value.toLocaleString('en-US', { maximumFractionDigits: 0 });
     const options = [
         { name: 'radius', label: 'Stellar radius [R☉]', min: 0.2, max: 3, step: 0.02, format: value => value.toFixed(2) },
-        { name: 'temperature', label: 'Stellar temperature [K]', min: 2500, max: 8000, step: 50, integer: true, format: wholeKelvin },
+        { name: 'temperature', label: 'Stellar temperature [K]', min: 2500, max: 11000, step: 50, integer: true, format: wholeKelvin },
         { name: 'albedo', label: 'Bond albedo', min: 0, max: 1, step: 0.05, format: value => value.toFixed(2) },
         { name: 'distance', label: 'Semimajor axis a [AU]', min: 0.01, max: 30, step: 0.01, logarithmic: true, format: significant },
         { name: 'eccentricity', label: 'Eccentricity e', min: 0, max: 0.75, step: 0.01, format: value => value.toFixed(2) },
