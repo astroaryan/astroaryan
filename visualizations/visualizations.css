@@ -98,6 +98,50 @@
 .blackbody-diagram .plot-text { font-size: 17px; }
 .blackbody-diagram .axis-label { font-size: 18px; }
 
+/* Keplerian radial velocity reuses the shared controls, plots, and results panels. */
+.viz-content.rv-content { flex-direction: row; gap: 12px; }
+.rv-plots { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-areas: 'curve orbit' 'observations mass'; align-items: start; flex: 1; gap: 20px 12px; min-width: 0; }
+.rv-content .results-panel { flex: 0 0 190px; width: auto; padding: 16px; }
+.rv-content .derived-values { display: block; }
+.rv-plot { padding: 20px 10px 12px; }
+.rv-plots .rv-plot { grid-area: curve; }
+.rv-diagram, .rv-orbit { display: block; width: 100%; height: auto; }
+.rv-plots .rv-orbit-plot { grid-area: orbit; display: flex; align-items: center; align-self: stretch; }
+.rv-orbit-plot.analysis-active { visibility: hidden; }
+.rv-orbit { background: #000; }
+.rv-orbit .plot-text { fill: #d9e1ef; font-size: 15px; }
+.rv-select-control label { display: block; margin-bottom: 8px; font-size: 1.05rem; font-weight: bold; }
+.rv-select-control select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 40px;
+    padding: 6px 32px 6px 10px;
+    border: 1px solid #c3b6ac;
+    border-radius: 4px;
+    font: inherit;
+    color: white;
+    background: rgba(0, 0, 0, 0.45) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") right 12px center / 12px 8px no-repeat;
+    appearance: none;
+}
+.rv-select-control option { color: #111; background: #fff; }
+.rv-settings { min-width: 0; border-top: 1px dotted #fff; padding-top: 16px; }
+.rv-settings .control-label { flex-wrap: wrap; }
+.rv-settings .control-label input[type="number"] { margin-left: auto; }
+.rv-settings summary { cursor: pointer; font-size: 1.05rem; font-weight: bold; }
+.rv-settings[open] summary { margin-bottom: 20px; }
+.rv-observation-settings { grid-area: observations; }
+.rv-observation-selects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.rv-observation-selects .rv-select-control { display: flex; flex-direction: column; }
+.rv-observation-selects select { margin-top: auto; padding-left: 6px; padding-right: 24px; background-position: right 8px center; }
+.rv-mass-settings { grid-area: mass; }
+.rv-observation-settings input:disabled { opacity: 0.45; cursor: default; }
+.rv-equation { display: block; width: 100%; max-width: 180px; height: auto; }
+.rv-view-actions { margin-top: 10px; flex-wrap: nowrap; }
+.visualizations-panel .rv-view-actions button { min-width: 0; font-size: 0.9rem; }
+.rv-analysis { grid-area: orbit; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); align-self: stretch; contain: size; gap: 8px; min-width: 0; min-height: 0; }
+.rv-analysis-plot { padding: 4px 6px; min-height: 0; }
+.rv-analysis-diagram { display: block; width: 100%; height: 100%; }
+
 @media (max-width: 1100px) {
     table.header1 { width: 100%; table-layout: fixed; font-size: 1.3rem; }
     table.header1 td { padding: 12px; overflow-wrap: anywhere; }
@@ -109,6 +153,11 @@
     .results-panel .derived-values { display: flex; flex-wrap: wrap; gap: 12px 28px; }
     .equilibrium-equation { max-width: 320px; }
     .planck-equation, .stefan-equation { max-width: 240px; }
+}
+@media (max-width: 900px) {
+    .rv-layout { flex-direction: column; }
+    .rv-layout > .viz-controls { width: 100%; flex-basis: auto; }
+    #rv-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
 }
 @media (max-width: 760px) {
     .viz-layout { flex-direction: column; }
@@ -123,9 +172,14 @@
     .visualization h2 { font-size: 1.8rem; }
     .planet-diagram { min-height: 260px; }
     .blackbody-plot { padding: 12px 4px; }
+    .rv-plot { padding: 12px 4px; }
     .results-panel { padding: 18px; }
 }
 @media (max-width: 600px) {
+    #rv-controls { display: block; }
+    .viz-content.rv-content { flex-direction: column; }
+    .rv-plots { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'curve' 'observations' 'orbit' 'mass'; width: 100%; }
+    .rv-content .results-panel { flex: auto; width: 100%; }
     table.header1, table.header1 tbody { display: block; }
     table.header1 { box-sizing: border-box; border-width: 6px; }
     table.header1 tr { display: flex; flex-wrap: wrap; }

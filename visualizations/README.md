@@ -35,7 +35,7 @@ astroaryan_space/
 
 The only visualization-specific browser dependencies are `visualizations.js` and `visualizations.css`. The README is documentation for future maintenance. `visualizations.html` stays in the repository root and also uses the existing shared `style1.css`, `variables.js`, and image assets.
 
-`visualizations.js` combines the colour tables, scientific equations, control/SVG helpers, and both visualization controllers in clearly marked sections. It loads once with `defer`; no build, CDN, framework, server-side Python, or runtime downloads are required. The existing function scopes are retained so combining files does not change their behaviour. Add future visualizations as another labelled section while the script remains manageable.
+`visualizations.js` combines the colour tables, scientific equations, control/SVG helpers, and the three visualization controllers in clearly marked sections. It loads once with `defer`; no build, CDN, framework, server-side Python, or runtime downloads are required. The existing function scopes are retained so combining files does not change their behaviour. Add future visualizations as another labelled section while the script remains manageable.
 
 The previous files had these roles:
 
@@ -147,7 +147,7 @@ Keep layout-specific explanations out of the plot. The results panel remains rea
 
 ## Blackbody spectrum
 
-The second visualization preserves the spectrum calculations from `blackbody_flambda.ipynb` and adds a spherical radius to convert surface flux into luminosity:
+The blackbody visualization preserves the spectrum calculations from `blackbody_flambda.ipynb` and adds a spherical radius to convert surface flux into luminosity:
 
 | Parameter or convention | Value |
 | --- | --- |
@@ -201,3 +201,57 @@ There is no retained test runner, fixture JSON, or Python exporter in this minim
 During initial implementation and file consolidation, checks passed against 100 Python planet cases and six complete 500-point Python blackbody spectra, including colour mappings, Kepler conversions, and parameter boundaries. Browser checks covered mouse/touch controls and layouts from 320 to 1440 pixels. Fonts and antialiasing can differ from Matplotlib; numerical outputs and colour-table values are the fidelity targets.
 
 The current radius/luminosity implementation passed nine independent Astropy comparisons (4,500 spectral samples, including 10,000 K), Stefan–Boltzmann totals, radius/temperature scaling checks, and browser checks at six widths from 320 to 1440 pixels. Browser checks also confirmed the exact 10,000 K endpoint, blue-white curve, matching equation and heading sizes, and unchanged orbit-panel dimensions with its inset border. These temporary development checks are not website dependencies or additional repository files.
+
+
+## Keplerian radial velocity
+
+Added between planet equilibrium temperature and blackbody spectrum, using `quick_visualizations/keplerian_radial_velocity.ipynb` as the scientific reference. The implementation follows the same file structure: section markup and an inline MathText equation in `visualizations.html`, calculations in `AstroPhysics`, a separate drawing/control closure in `visualizations.js`, and scoped additions to `visualizations.css`. No new runtime files or dependencies are needed.
+
+The shared slider helper, exact-value fields, gold controls, dotted dividers, white results card, plot typography, and responsive breakpoints are retained. The white RV plot, black starfield orbit, and white results card sit side by side. The results card is 190 pixels wide and the gaps are 12 pixels to keep the row compact. The RV plot uses a 1.2:1 share of the plotting row relative to the orbit, with a taller SVG aspect ratio (height 0.95 times its width, bounded to 360–520 pixels); below 900 pixels geometry moves above the plots in two columns, and below 600 pixels the panels and geometry controls stack for readability. The model/observations legend sits inside the plot at the upper right. Orbit geometry controls remain on the left. Expandable Observation settings sit below the RV curve, and expandable Mass & period settings sit below the orbit; both groups start open. The orbital and sampling controls retain their notebook ranges, except random seeds run from 1 to 10, Jupiter-mode noise spans 0–20 m/s, and Jupiter masses start at 0.5 M<sub>Jup</sub>. Time window and Noise model share one row; noise is Gaussian or None. Reset orbit and Play orbit remain below geometry on the left and apply to the whole visualization. Reset restores every parameter, including both collapsed groups, and pauses playback.
+
+| Control | Default | Range | Slider step |
+| --- | --- | --- | --- |
+| Stellar mass | 1 M☉ | 0.1–3 M☉ | 0.05 |
+| Companion mass, Earth mode | 10 M⊕ | 1–200 M⊕ | 1 |
+| Companion mass, Jupiter mode | 1 M<sub>Jup</sub> on switching | 0.5–80 M<sub>Jup</sub> | 0.5 |
+| Period | 30 days | 1–365 days | 1 |
+| Eccentricity | 0 | 0–0.75 | 0.01 |
+| Inclination | 90° | 0–180° | 1° |
+| Star’s argument of periastron | 270° | 0–360° | 5° |
+| Orbital phase t/P | 0.5 | 0–1 | 0.01 |
+| Time window | 2 cycles | 2 cycles or 365 days | — |
+| Noise model | Gaussian | Gaussian, None | — |
+| Noise σ, Earth mode | 1 m/s | 0–5 m/s | 0.1 |
+| Noise σ, Jupiter mode | 5 m/s on switching | 0–20 m/s | 0.1 |
+| Observations | 100 | 20–300 | 10 |
+| Random seed | 1 | 1–10 | 1 |
+
+A fresh page load or reload initializes Earth masses (10 M⊕), a 2-cycle time window, and Gaussian noise (1 m/s). All three dropdowns are synchronized to the model on initialization, reset, and pageshow, with browser autocomplete disabled. Switching mass units resets companion mass to one selected unit and noise to that mode’s default. Noise σ is entered in m/s in both modes and converted to km/s internally for the Jupiter-mode plot and error bars. Selecting None disables σ and removes noise/error bars. Number fields retain the existing direct-entry convention; integer-valued parameters round to integers.
+
+Constants are G = 6.67430e−11, M☉ = 1.98840987e30 kg, M_Jup = 1.89812460e27 kg, M⊕ = 5.97216787e24 kg, and day = 86400 s. Systemic velocity is zero. The RV is K[cos(ν + ω) + e cos ω]; ω belongs to the star, and mean anomaly advances with time. Inclination 0° or 180° gives exactly zero orbital RV. The y-axis always includes the full edge-on theoretical range plus observations and ±σ bars, so decreasing inclination visibly shrinks the curve.
+
+The orbit uses the notebook’s x/z bird’s-eye projection, opposite star/companion positions, and schematic wobble scales. Transit alignment checks both sky coordinates and requires the companion to be between the star and Earth. The default circular system is at transit, zero RV, and phase 0.5. This point-mass model does not calculate finite-radius transit durations or orbital survival.
+
+Observation times are random rather than regularly spaced. The browser uses seeded Mulberry32 draws and Box–Muller Gaussian noise; it reproduces the notebook’s distributions and seed behavior, not NumPy’s exact random samples. Changing phase does not regenerate observations. Model samples are uniform in eccentric anomaly, with 120–1200 samples per cycle depending on the displayed cycle count, to resolve periastron while keeping long windows responsive.
+
+Verification: 360 notebook configurations spanning both mass modes, eccentricities 0/0.4/0.75, inclinations 0/30/90/150/180°, periastron arguments 0/90/270/360°, and periods 1/30/365 days matched 2520 RV and orbit samples. Checks also covered seeded reproducibility, noise bounds, face-on flat curves, the 365-day/1-day-period extreme, and the existing planet and blackbody physics. Development comparison scripts and fixtures stay outside the repository, consistent with the existing minimal file set.
+
+Playback advances mean anomaly uniformly, with one illustrative orbit per 12 seconds. The red star marker traverses the whole displayed time window, wrapping at its end; orbital phase wraps each orbit. The simulated observations remain fixed during playback, phase changes, and dragging. Changing a control, dragging, resetting, hiding the page, or enabling reduced motion pauses playback. Play resumes from the current time.
+
+Drag the planet in the RV orbit view to update orbital phase and the red star on the curve. Dragging tracks phase crossings in either direction, so the marker continues through successive orbits and wraps only at the end of the plotted time window. The orbital phase slider and exact-value field select the first orbit from 0 to 1 inclusive and stay at the selected endpoint. Planet dragging, planet keyboard controls, and playback wrap automatically through the full time window. Geometry, mass, and noise edits retain the current cycle; changing the period or time window starts from the same phase in the first cycle. The pointer position is transformed back through the projected ellipse, then eccentric anomaly is converted to mean anomaly and phase. At exactly face-on inclinations, the orbit projects to a line in this view, so dragging retains the phase branch nearest the previous phase. The planet has a minimum 44-pixel target, pointer capture, and the same keyboard controls as the equilibrium-temperature planet. The orbit’s stellar disk is slightly enlarged; orbital dimensions are unchanged. Star/companion text labels and the extended dotted sightline are omitted, and the short line-of-sight arrow stays fixed. The orbit is shifted up 12 SVG units, while Earth and the arrow are shifted down 4 units to leave a gap below the planet at the default phase.
+
+The interaction update passed 10,500 orbit-projection/phase round trips, including both face-on endpoints, plus the existing 360 notebook configurations. Browser checks covered synchronized playback into the second RV cycle, dragging to quadrature, dragging to pause playback, reset, Gaussian/None, fixed observation samples and sight arrow, and desktop/mobile layouts.
+
+The results card shows K (RV semi-amplitude), current radial velocity, orbital phase, and direction from the sign of the instantaneous RV ("No direction yet!" at phase 0 or 0.5, accounting for floating-point rounding; a dash at other zero-RV phases). Its Radial Velocity Function equation uses v_r(t) and ν(t), typeset over three lines for legibility in the narrow card. The visible instructions and schematic disclaimer have been removed from the card; the SVG descriptions retain accessible context. Earth’s green polygons depict a schematic Asia-facing globe with India, Southeast Asia, and offshore islands.
+
+### On-demand RV analysis
+
+Show Orbit and Show Analysis use the Reset/Play button styling, with slightly smaller text to fit side by side in a second row below them. Orbit is the initial view. Show Analysis pauses playback and replaces only the black orbit panel with two stacked white charts: Periodogram above Amplitude Fit. The radial velocity curve, results card, and parameter controls remain visible in their original columns. The hidden orbit retains its layout space, and the two analysis charts share exactly that height, including their gap and padding. The analysis plots have no legends. Single-line titles show Periodogram: Period Recovered (… days) and Amplitude Fit: Amplitude Recovered (… m/s or km/s), using the fitted period, amplitude, and snapshot units. The plot name stays larger and bold beside the smaller recovered-value text; both scale together only when needed to fit the panel width. Smaller top margins give the power and velocity axes more vertical space without changing panel dimensions, gaps, or borders. The reference lines and observation/bin/fit styling are retained. View-button borders change on hover only; the pressed state remains available to assistive technology. Each click takes a fresh snapshot of the current simulated observations. Slider changes and resizing never rerun the analysis; resizing only redraws the stored results. Show Orbit restores the black orbit panel. Play also returns to the orbit view; Reset restores all defaults, clears the analysis, and returns to Orbit.
+
+The browser fits `a cos(2πt/P) + b sin(2πt/P) + c` by ordinary least squares at 1,996 trial periods from 1 to 400 days, spaced by 0.2 days in **period**, with a logarithmic period axis. All observations have the same prescribed uncertainty, so equal weights give the same fit as constant inverse-variance weights. Cosine and sine columns are centered before solving the two coefficients and recovering the constant offset. The standard/GLS-ZK power is the fractional reduction in squared residuals relative to a constant model, bounded to 0–1. Only the observed data enter the fit; the injected period is used solely for its reference line. The dominant grid peak supplies the recovery period, with no refinement or additional peak markers.
+
+The dashed nominal 0.1% FAP threshold uses the same independent-frequency approximation as the notebook's PyAstronomy GLS: `M = max(1, time span × (1/1 day − 1/400 days))`, single-frequency tail `(1 − power)^((N − 3)/2)`, and search-wide FAP `1 − (1 − single-frequency tail)^M`. This is an analytic reference, not a calibrated false-alarm guarantee or bootstrap result. The coarse period grid can miss narrow peaks, particularly at short periods over long baselines; eccentric signals can favor harmonics. References: [GLS normalization](https://docs.astropy.org/en/stable/timeseries/lombscargle.html#periodogram-normalizations), [PyAstronomy GLS implementation](https://github.com/sczesla/PyAstronomy/blob/master/PyAstronomy/pyTiming/pyPeriod/gls.py), and [FAP interpretation](https://docs.astropy.org/en/stable/timeseries/lombscargle.html#false-alarm-approximations).
+
+Amplitude Fit folds the same snapshot at the dominant period, with phase zero at the first observation. Gray points are individual observations, green points are means in 20 equal phase buckets, and the orange curve is the unbinned least-squares sinusoid with semi-amplitude `K = hypot(a, b)`. Bin locations are mean phases. Error bars use the sample standard deviation (N−1 denominator) divided by the square root of the bin count. Empty bins are omitted; singleton bins retain a point without an undefined error bar. A constant/noiseless face-on dataset displays no recovered period or amplitude. Units come from the snapshot: m/s for Earth masses and km/s for Jupiter masses.
+
+Development validation compared eight configurations, including short/long periods, both mass units, eccentricity 0.75, 20–300 observations, zero noise, and face-on cases, against independent NumPy least-squares fits and Astropy GLS. Maximum periodogram-power disagreement was 4.1e−13. Coefficients, phase-bin means/standard errors, and nominal FAP thresholds also agreed. Computation took 6–87 ms locally for varying data (one click per search). Browser checks covered frozen snapshots after slider edits, refresh on click, unit switching, flat-data handling, Reset/Play, and 390/900/1440-pixel layouts. No Python package or new runtime dependency is used by the website.

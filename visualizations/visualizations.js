@@ -56,6 +56,145 @@ window.AstroPhysics = (() => {
         return ((anomaly % TAU) + TAU) % TAU;
     }
 
+    function radialVelocitySystem(state) {
+        const starMass = state.starMass * 1.98840987e30, companionMass = state.companionMass * (state.massUnit === 'Earth' ? 5.97216787e24 : 1.89812460e27);
+        const velocityScale = state.massUnit === 'Earth' ? 1 : 1000;
+        const sinI = state.inclination === 0 || state.inclination === 180 ? 0 : Math.sin(state.inclination * Math.PI / 180);
+        const edgeAmplitude = (TAU * 6.67430e-11 / (state.period * 86400)) ** (1 / 3) * companionMass / ((starMass + companionMass) ** (2 / 3) * Math.sqrt(1 - state.eccentricity ** 2)) / velocityScale;
+        return { amplitude: edgeAmplitude * sinI, edgeAmplitude, unit: state.massUnit === 'Earth' ? 'm/s' : 'km/s', omega: state.omega * Math.PI / 180, sinI };
+    }
+
+    function keplerianVelocity(time, state, system = radialVelocitySystem(state)) {
+        const anomaly = trueFromMean(TAU * time / state.period, state.eccentricity);
+        const velocity = system.amplitude * (Math.cos(anomaly + system.omega) + state.eccentricity * Math.cos(system.omega));
+        return Math.abs(velocity) < 1e-12 * system.edgeAmplitude ? 0 : velocity;
+    }
+
+    function projectedRVOrbit(eccentricAnomaly, state) {
+        const orbitX = Math.cos(eccentricAnomaly) - state.eccentricity, orbitY = Math.sqrt(1 - state.eccentricity ** 2) * Math.sin(eccentricAnomaly);
+        const omega = state.omega * Math.PI / 180, inclination = state.inclination * Math.PI / 180;
+        const rotatedY = orbitX * Math.sin(omega) + orbitY * Math.cos(omega);
+        return { x: orbitX * Math.cos(omega) - orbitY * Math.sin(omega), skyY: state.inclination === 90 ? 0 : rotatedY * Math.cos(inclination), z: state.inclination === 0 || state.inclination === 180 ? 0 : rotatedY * Math.sin(inclination) };
+    }
+
+    function rvPhaseFromPoint(x, z, state) {
+        const eccentricity = state.eccentricity, omega = state.omega * Math.PI / 180;
+        const sinI = Math.sin(state.inclination * Math.PI / 180), minorAxis = Math.sqrt(1 - eccentricity ** 2);
+        const phaseFromE = anomaly => (((anomaly - eccentricity * Math.sin(anomaly)) / TAU) % 1 + 1) % 1;
+        if (Math.abs(sinI) > 1e-6) {
+            const orbitX = x * Math.cos(omega) + z / sinI * Math.sin(omega);
+            const orbitY = -x * Math.sin(omega) + z / sinI * Math.cos(omega);
+            return phaseFromE(Math.atan2(orbitY / minorAxis, orbitX + eccentricity));
+        }
+        // A face-on orbit projects to a line here; retain the nearest phase branch.
+        const offset = Math.atan2(-minorAxis * Math.sin(omega), Math.cos(omega));
+        const extent = Math.hypot(Math.cos(omega), minorAxis * Math.sin(omega));
+        const angle = Math.acos(clamp((x + eccentricity * Math.cos(omega)) / extent, -1, 1));
+        const phases = [phaseFromE(offset + angle), phaseFromE(offset - angle)];
+        const distance = phase => Math.abs(((phase - state.phase + 1.5) % 1) - 0.5);
+        return distance(phases[0]) <= distance(phases[1]) ? phases[0] : phases[1];
+    }
+
+    function radialVelocitySeries(state) {
+        // data wrangling
+        const system = radialVelocitySystem(state), duration = state.timeWindow === '2 cycles' ? 2 * state.period : 365;
+        const cycles = Math.ceil(duration / state.period), samplesPerCycle = Math.max(120, Math.min(1200, Math.floor(24000 / cycles)));
+        const noiseSigma = state.noiseType === 'None' ? 0 : state.sigma / (system.unit === 'km/s' ? 1000 : 1);
+        // Seeded browser draws retain the notebook's distributions, not NumPy's exact sequence.
+        let seed = state.seed;
+        function random() {
+            seed = (seed + 0x6D2B79F5) | 0;
+            let value = Math.imul(seed ^ seed >>> 15, 1 | seed);
+            value ^= value + Math.imul(value ^ value >>> 7, 61 | value);
+            return ((value ^ value >>> 14) >>> 0) / 4294967296;
+        }
+        const observationTimes = Array.from({ length: state.points }, () => random() * duration).sort((a, b) => a - b);
+
+        // calculations
+        const model = [];
+        // Uniform eccentric-anomaly spacing resolves the rapid motion near periastron.
+        for (let index = 0; index <= cycles * samplesPerCycle; index++) {
+            const eccentricAnomaly = TAU * index / samplesPerCycle;
+            const time = state.period * (eccentricAnomaly - state.eccentricity * Math.sin(eccentricAnomaly)) / TAU;
+            if (time >= duration) break;
+            const anomaly = 2 * Math.atan2(Math.sqrt(1 + state.eccentricity) * Math.sin(eccentricAnomaly / 2), Math.sqrt(1 - state.eccentricity) * Math.cos(eccentricAnomaly / 2));
+            model.push([time, system.amplitude * (Math.cos(anomaly + system.omega) + state.eccentricity * Math.cos(system.omega))]);
+        }
+        model.push([duration, keplerianVelocity(duration, state, system)]);
+        const observations = observationTimes.map(time => {
+            const noise = state.noiseType === 'Gaussian' ? Math.sqrt(-2 * Math.log(1 - random())) * Math.cos(TAU * random()) : 0;
+            return [time, keplerianVelocity(time, state, system) + noiseSigma * noise];
+        });
+        const offset = system.edgeAmplitude * state.eccentricity * Math.cos(system.omega);
+        const lower = Math.min(offset - system.edgeAmplitude, ...observations.map(point => point[1] - noiseSigma));
+        const upper = Math.max(offset + system.edgeAmplitude, ...observations.map(point => point[1] + noiseSigma));
+        const padding = 0.08 * (upper - lower);
+        return { ...system, duration, model, observations, noiseSigma, lower: lower - padding, upper: upper + padding };
+    }
+
+    function sinusoidFit(observations, period) {
+        // data wrangling
+        const count = observations.length, reference = observations[0][0];
+        const mean = observations.reduce((sum, point) => sum + point[1], 0) / count;
+        const cosine = observations.map(point => Math.cos(TAU * (point[0] - reference) / period));
+        const sine = observations.map(point => Math.sin(TAU * (point[0] - reference) / period));
+        const meanCosine = cosine.reduce((sum, value) => sum + value, 0) / count;
+        const meanSine = sine.reduce((sum, value) => sum + value, 0) / count;
+
+        // calculations: eliminate the constant term before solving the two coefficients.
+        let cc = 0, ss = 0, cs = 0, cy = 0, sy = 0, variance = 0;
+        for (let index = 0; index < count; index++) {
+            const cos = cosine[index] - meanCosine, sin = sine[index] - meanSine, velocity = observations[index][1] - mean;
+            cc += cos * cos;
+            ss += sin * sin;
+            cs += cos * sin;
+            cy += cos * velocity;
+            sy += sin * velocity;
+            variance += velocity * velocity;
+        }
+        const determinant = cc * ss - cs * cs;
+        if (determinant <= Number.EPSILON * cc * ss) return null;
+        const a = (cy * ss - sy * cs) / determinant, b = (sy * cc - cy * cs) / determinant;
+        const c = mean - a * meanCosine - b * meanSine;
+        return { a, b, c, amplitude: Math.hypot(a, b), power: variance === 0 ? 0 : clamp((a * cy + b * sy) / variance, 0, 1) };
+    }
+
+    function radialVelocityAnalysis(observations, injectedPeriod, unit) {
+        // data wrangling: a fixed snapshot of the simulated observations, never the model curve.
+        const data = observations.map(point => [...point]);
+        const minimumPeriod = 1, maximumPeriod = 400, periodStep = 0.2;
+        const reference = data[0][0], baseline = data[data.length - 1][0] - reference;
+        const constant = data.every(point => point[1] === data[0][1]);
+
+        // calculations
+        let peakPeriod = null, fit = null;
+        const periodogram = Array.from({ length: Math.round((maximumPeriod - minimumPeriod) / periodStep) + 1 }, (_, index) => {
+            const period = minimumPeriod + index * periodStep;
+            const candidate = constant ? null : sinusoidFit(data, period);
+            if (candidate && (!fit || candidate.power > fit.power)) { fit = candidate; peakPeriod = period; }
+            return [period, candidate ? candidate.power : 0];
+        });
+        // Nominal independent-frequency approximation, using the searched bandwidth and time span.
+        const independentFrequencies = Math.max(1, baseline * (1 / minimumPeriod - 1 / maximumPeriod));
+        const singleFap = -Math.expm1(Math.log1p(-0.001) / independentFrequencies);
+        const falseAlarmLevel = -Math.expm1(2 * Math.log(singleFap) / (data.length - 3));
+        const folded = fit ? data.map(([time, velocity]) => [((time - reference) / peakPeriod) % 1, velocity]) : [];
+        const buckets = Array.from({ length: 20 }, () => []);
+        for (const point of folded) buckets[Math.min(19, Math.floor(point[0] * 20))].push(point);
+        const bins = buckets.filter(bucket => bucket.length).map(bucket => {
+            const count = bucket.length;
+            const phase = bucket.reduce((sum, point) => sum + point[0], 0) / count;
+            const velocity = bucket.reduce((sum, point) => sum + point[1], 0) / count;
+            const sem = count > 1 ? Math.sqrt(bucket.reduce((sum, point) => sum + (point[1] - velocity) ** 2, 0) / (count - 1) / count) : null;
+            return { phase, velocity, sem, count };
+        });
+        const model = fit ? Array.from({ length: 301 }, (_, index) => {
+            const phase = index / 300;
+            return [phase, fit.a * Math.cos(TAU * phase) + fit.b * Math.sin(TAU * phase) + fit.c];
+        }) : [];
+        return { observations: data, injectedPeriod, unit, periodogram, peakPeriod, fit, falseAlarmLevel, folded, bins, model };
+    }
+
     function blackbodyColour(temperature) {
         const knots = AstroColormaps.blackbody;
         const upper = knots.findIndex(row => row[0] >= temperature);
@@ -78,11 +217,11 @@ window.AstroPhysics = (() => {
         return { peak, wavelengths, flux, luminosity, totalLuminosity, colour: blackbodyColour(temperature) };
     }
 
-    return { R_SUN, AU, TAU, clamp, snap, colourAt, rgb, significant, planetSystem, meanFromTrue, trueFromMean, blackbodyColour, blackbodySpectrum };
+    return { R_SUN, AU, TAU, clamp, snap, colourAt, rgb, significant, planetSystem, meanFromTrue, trueFromMean, radialVelocitySystem, keplerianVelocity, projectedRVOrbit, rvPhaseFromPoint, radialVelocitySeries, sinusoidFit, radialVelocityAnalysis, blackbodyColour, blackbodySpectrum };
 })();
 
 // Shared sliders and SVG helpers
-/* Small shared helpers for the two standalone SVG visualizations. */
+/* Small shared helpers for the standalone SVG visualizations. */
 window.AstroVisuals = (() => {
     const { clamp, snap } = AstroPhysics;
     function attributes(element, values) {
@@ -283,6 +422,353 @@ window.AstroVisuals = (() => {
     document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
     matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => { if (event.matches) pause(); });
     new ResizeObserver(render).observe(svg);
+    render();
+})();
+
+// Keplerian radial velocity: drawing, dragging, and playback
+(() => {
+    const { TAU, snap, significant, trueFromMean, radialVelocitySeries, radialVelocityAnalysis, keplerianVelocity, projectedRVOrbit, rvPhaseFromPoint } = AstroPhysics;
+    const { attributes, svgElement, control, svgPoint } = AstroVisuals;
+    const defaults = { starMass: 1, companionMass: 10, massUnit: 'Earth', period: 30, eccentricity: 0, inclination: 90, omega: 270, phase: 0.5, timeWindow: '2 cycles', noiseType: 'Gaussian', sigma: 1, points: 100, seed: 1 };
+    let state = { ...defaults }, series, plotX, plotY, analysis = null;
+    let playing = false, frame = null, lastTime = null, pointer = null, dragPhase = 0, cursorTime = defaults.phase * defaults.period;
+    const controls = {};
+    const svg = document.getElementById('rv-diagram'), orbitSvg = document.getElementById('rv-orbit');
+    const massUnit = document.getElementById('rv-mass-unit'), timeWindow = document.getElementById('rv-time-window'), noiseType = document.getElementById('rv-noise-type');
+    syncSelections();
+    const play = document.getElementById('rv-play');
+    const showOrbit = document.getElementById('rv-show-orbit'), showAnalysis = document.getElementById('rv-show-analysis');
+    const analysisPanel = document.getElementById('rv-analysis');
+    const periodogramSvg = document.getElementById('rv-periodogram'), recoverySvg = document.getElementById('rv-recovery');
+    const definitions = svgElement('defs', {}, svg);
+    const clip = svgElement('clipPath', { id: 'rv-clip' }, definitions);
+    const clipRectangle = svgElement('rect', {}, clip);
+    const axes = svgElement('g', { 'aria-hidden': 'true' }, svg);
+    const plot = svgElement('g', { 'clip-path': 'url(#rv-clip)' }, svg);
+    const curve = svgElement('path', { id: 'rv-curve', fill: 'none', stroke: '#2966a3', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }, plot);
+    const observations = svgElement('g', { id: 'rv-observations', fill: '#d8832f', stroke: '#d8832f', opacity: 0.7 }, plot);
+    const cursorLine = svgElement('line', { stroke: '#d73027', 'stroke-dasharray': '5 4', opacity: 0.65 }, plot);
+    const legend = svgElement('g', { id: 'rv-legend' }, svg);
+    const starPoints = Array.from({ length: 10 }, (_, index) => {
+        const angle = index * Math.PI / 5 - Math.PI / 2, radius = index % 2 ? 3.8 : 9;
+        return `${radius * Math.cos(angle)},${radius * Math.sin(angle)}`;
+    }).join(' ');
+    const cursor = svgElement('polygon', { id: 'rv-cursor', points: starPoints, fill: '#d73027', stroke: '#fff', 'stroke-width': 1 }, svg);
+    const starfield = svgElement('g', { 'aria-hidden': 'true' }, orbitSvg);
+    for (let index = 1; index <= 100; index++) {
+        svgElement('circle', { cx: (index * 0.754877666 % 1) * 480, cy: (index * 0.56984029 % 1) * 430, r: index % 9 === 0 ? 1.4 : 0.7, fill: '#fff', opacity: 0.18 + (index % 5) * 0.1 }, starfield);
+    }
+    const orbitDefinitions = svgElement('defs', {}, orbitSvg);
+    const arrow = svgElement('marker', { id: 'rv-sight-arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, orbitDefinitions);
+    svgElement('path', { d: 'M0 0 L8 4 L0 8', fill: 'none', stroke: '#b6dce7', 'stroke-width': 1.5 }, arrow);
+    const companionOrbit = svgElement('path', { fill: 'none', stroke: '#aab4c8', opacity: 0.75, 'stroke-dasharray': '6 4', 'stroke-width': 1.5 }, orbitSvg);
+    const starOrbit = svgElement('path', { fill: 'none', stroke: '#d73027', opacity: 0.65 }, orbitSvg);
+    svgElement('path', { d: 'M235 188 H245 M240 183 V193', stroke: '#c9d2e4' }, orbitSvg);
+    const glowOuter = svgElement('circle', { r: 18.7, fill: '#d73027', opacity: 0.06 }, orbitSvg);
+    const glowInner = svgElement('circle', { r: 14.85, fill: '#d73027', opacity: 0.1 }, orbitSvg);
+    const star = svgElement('circle', { id: 'rv-star', r: 11, fill: '#d73027' }, orbitSvg);
+    const companion = svgElement('circle', { id: 'rv-companion', r: 6.5, fill: '#916039', stroke: '#c39a72', 'stroke-width': 0.8 }, orbitSvg);
+    const earth = svgElement('g', { id: 'rv-earth', transform: 'translate(240 404)' }, orbitSvg);
+    svgElement('circle', { r: 15, fill: '#298acc', stroke: '#8acbeb', 'stroke-width': 0.8 }, earth);
+    const earthClip = svgElement('clipPath', { id: 'rv-earth-clip' }, orbitDefinitions);
+    svgElement('circle', { r: 14.6 }, earthClip);
+    const land = svgElement('g', { fill: '#69b56d', 'clip-path': 'url(#rv-earth-clip)' }, earth);
+    // Schematic Asia: broad northern landmass, India, Southeast Asia, and offshore islands.
+    svgElement('path', { d: 'M-14 -6 L-12 -9 L-8 -11 L-3 -12 L2 -12 L6 -11 L10 -8 L11 -5 L9 -4 L11 -2 L10 0 L7 -1 L6 1 L4 2 L5 4 L5 7 L3 5 L1 1 L-1 3 L-2 7 L-4 5 L-5 1 L-7 2 L-8 4 L-11 2 L-11 0 L-14 -3 Z' }, land);
+    svgElement('path', { d: 'M12 -8 L14 -6 L14 -3 L12 -5 Z M10 -1 L12 0 L11 3 L9 4 L10 1 Z M8 3 L9 4 L8 5 L7.5 4 Z M10 5 L11 6 L11 8 L10 7 Z M12 8 L13 10 L11 9 Z M2 8 L3 8 L5 11 L4 11 Z M6 10 L10 11 L11 12 L6 11 Z M7 6 L9 6 L10 8 L8 9 L7 8 Z' }, land);
+    svgElement('line', { x1: 240, y1: 382, x2: 240, y2: 346, stroke: '#b6dce7', 'stroke-width': 1.4, 'marker-end': 'url(#rv-sight-arrow)' }, orbitSvg);
+    svgElement('text', { x: 261, y: 367, class: 'plot-text', style: 'fill:#b6dce7' }, orbitSvg, 'Line of sight');
+    svgElement('text', { x: 264, y: 409, class: 'plot-text' }, orbitSvg, 'Earth');
+    const hit = svgElement('circle', { class: 'planet-hit', id: 'rv-planet-drag', tabindex: 0, role: 'slider', 'aria-label': 'Planet position: orbital phase', 'aria-valuemin': 0, 'aria-valuemax': 1, 'aria-describedby': 'rv-orbit-description' }, orbitSvg);
+
+    function syncSelections() {
+        massUnit.value = state.massUnit;
+        timeWindow.value = state.timeWindow;
+        noiseType.value = state.noiseType;
+    }
+    function buildControls() {
+        const jupiter = state.massUnit === 'Jupiter';
+        const options = [
+            { name: 'starMass', label: 'Stellar mass [M☉]', min: 0.1, max: 3, step: 0.05, format: value => value.toFixed(2) },
+            { name: 'companionMass', label: `Companion mass [${jupiter ? 'M_Jup' : 'M⊕'}]`, min: jupiter ? 0.5 : 1, max: jupiter ? 80 : 200, step: jupiter ? 0.5 : 1, integer: !jupiter },
+            { name: 'period', label: 'Period [days]', min: 1, max: 365, step: 1, integer: true },
+            { name: 'eccentricity', label: 'Eccentricity e', min: 0, max: 0.75, step: 0.01, format: value => value.toFixed(2) },
+            { name: 'inclination', label: 'Inclination i [°]', min: 0, max: 180, step: 1, integer: true },
+            { name: 'omega', label: 'Periastron ω [°]', min: 0, max: 360, step: 5, integer: true },
+            { name: 'phase', label: 'Orbital phase t/P', min: 0, max: 1, step: 0.01, format: value => value.toFixed(2) },
+            { name: 'sigma', label: 'Noise σ [m/s]', min: 0, max: jupiter ? 20 : 5, step: 0.1, format: value => value.toFixed(1) },
+            { name: 'points', label: 'Observations', min: 20, max: 300, step: 10, integer: true },
+            { name: 'seed', label: 'Random seed', min: 1, max: 10, step: 1, integer: true }
+        ];
+        for (const id of ['rv-controls', 'rv-observation-controls', 'rv-mass-controls']) document.getElementById(id).replaceChildren();
+        for (const option of options) {
+            const containerId = ['sigma', 'points', 'seed'].includes(option.name) ? 'rv-observation-controls' : ['starMass', 'companionMass', 'period'].includes(option.name) ? 'rv-mass-controls' : 'rv-controls';
+            const container = document.getElementById(containerId);
+            controls[option.name] = control(container, { ...option, id: `rv-${option.name}`, value: state[option.name] }, value => {
+                pause();
+                state[option.name] = value;
+                if (option.name === 'phase') { cursorTime = value * state.period; return renderCurrent(); }
+                render(option.name === 'period');
+            });
+        }
+        if (jupiter) controls.companionMass.label.innerHTML = 'Companion mass [M<sub>Jup</sub>]';
+        controls.sigma.slider.disabled = controls.sigma.number.disabled = state.noiseType === 'None';
+    }
+
+    function ticks(minimum, maximum, count) {
+        const rough = (maximum - minimum) / count, power = 10 ** Math.floor(Math.log10(rough));
+        const step = [1, 2, 2.5, 5, 10].find(value => value * power >= rough) * power;
+        const values = [];
+        for (let value = Math.ceil(minimum / step) * step; value <= maximum + step * 1e-8; value += step) values.push(Math.abs(value) < step * 1e-8 ? 0 : value);
+        return values;
+    }
+    function analysisAxes(target, title, subtitle, xLabel, yLabel, xLimits, yLimits, logarithmic = false) {
+        const width = Math.max(240, target.clientWidth), compact = width < 500;
+        const height = target.clientHeight * width / target.clientWidth, short = height < 155, fontSize = short ? 9 : compact ? 10 : 12;
+        const left = compact ? 42 : 54, right = width - 12, top = short ? 23 : 28, bottom = height - (short ? 27 : 30);
+        const transformX = value => logarithmic ? Math.log10(value) : value;
+        const x = value => left + (transformX(value) - transformX(xLimits[0])) / (transformX(xLimits[1]) - transformX(xLimits[0])) * (right - left);
+        const y = value => bottom - (value - yLimits[0]) / (yLimits[1] - yLimits[0]) * (bottom - top);
+        target.replaceChildren();
+        attributes(target, { viewBox: `0 0 ${width} ${height}` });
+        svgElement('title', { id: `${target.id}-title` }, target, `${title}: ${subtitle}`);
+        const text = (label, values) => svgElement('text', { class: 'plot-text', style: `font-size:${fontSize}px`, ...values }, target, label);
+        const heading = text('', { x: width / 2, y: short ? 13 : 16, 'text-anchor': 'middle', style: `font-size:${short ? 10 : 12}px` });
+        svgElement('tspan', { style: 'font-size:1.333em;font-weight:bold' }, heading, `${title}: `);
+        svgElement('tspan', {}, heading, subtitle);
+        heading.style.fontSize = `${(short ? 10 : 12) * Math.min(1, (width - 12) / heading.getComputedTextLength())}px`;
+        const xTicks = logarithmic ? (compact ? [1, 10, 100, 400] : [1, 2, 5, 10, 20, 50, 100, 200, 400]) : (compact ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1]);
+        for (const value of xTicks) {
+            svgElement('line', { x1: x(value), x2: x(value), y1: top, y2: bottom, stroke: '#eee' }, target);
+            text(String(value), { x: x(value), y: bottom + 13, 'text-anchor': 'middle' });
+        }
+        for (const value of ticks(yLimits[0], yLimits[1], bottom - top < 60 ? 2 : 3)) {
+            svgElement('line', { x1: left, x2: right, y1: y(value), y2: y(value), stroke: '#eee' }, target);
+            text(significant(value), { x: left - 8, y: y(value) + 4, 'text-anchor': 'end' });
+        }
+        svgElement('rect', { x: left, y: top, width: right - left, height: bottom - top, fill: 'none', stroke: '#333' }, target);
+        text(xLabel, { x: (left + right) / 2, y: height - 3, 'text-anchor': 'middle' });
+        text(yLabel, { transform: `translate(${compact ? 12 : 16} ${(top + bottom) / 2}) rotate(-90)`, 'text-anchor': 'middle' });
+        return { x, y, left, right, top, bottom };
+    }
+    function renderAnalysis() {
+        if (!analysis || analysisPanel.hidden || !analysisPanel.clientWidth) return;
+        const { periodogram, peakPeriod, injectedPeriod, fit, falseAlarmLevel, folded, bins, model, unit } = analysis;
+        const powerMax = Math.max(falseAlarmLevel, fit ? fit.power : 0) * 1.12;
+        const spectrum = analysisAxes(periodogramSvg, 'Periodogram', `Period Recovered (${fit ? `${peakPeriod.toFixed(1)} days` : '—'})`, 'Period (days)', 'Power', [1, 400], [0, powerMax], true);
+        svgElement('desc', { id: 'rv-periodogram-description' }, periodogramSvg, `${analysis.observations.length} simulated observations; periods 1–400 days in 0.2-day steps. ${fit ? `Dominant period ${peakPeriod.toFixed(1)} days.` : 'No RV variation to fit.'} Injected period ${injectedPeriod} days. Nominal 0.1% FAP uses an approximate independent-frequency count.`);
+        svgElement('path', { d: periodogram.map(([period, power], index) => `${index ? 'L' : 'M'}${spectrum.x(period).toFixed(2)},${spectrum.y(power).toFixed(2)}`).join(' '), fill: 'none', stroke: '#2966a3', 'stroke-width': 1.6, 'stroke-linejoin': 'round' }, periodogramSvg);
+        svgElement('line', { x1: spectrum.left, x2: spectrum.right, y1: spectrum.y(falseAlarmLevel), y2: spectrum.y(falseAlarmLevel), stroke: '#222', 'stroke-width': 1.5, 'stroke-dasharray': '6 4' }, periodogramSvg);
+        svgElement('line', { x1: spectrum.x(injectedPeriod), x2: spectrum.x(injectedPeriod), y1: spectrum.top, y2: spectrum.bottom, stroke: '#d73027', 'stroke-width': 2.5, 'stroke-dasharray': '2 4' }, periodogramSvg);
+        if (fit) svgElement('line', { x1: spectrum.x(peakPeriod), x2: spectrum.x(peakPeriod), y1: spectrum.top, y2: spectrum.bottom, stroke: '#e58a18', 'stroke-width': 1.5, 'stroke-dasharray': '7 4' }, periodogramSvg);
+
+        const velocities = [...folded.map(point => point[1]), ...model.map(point => point[1]), ...bins.flatMap(bin => [bin.velocity - (bin.sem || 0), bin.velocity + (bin.sem || 0)])];
+        const lower = fit ? Math.min(...velocities) : -1, upper = fit ? Math.max(...velocities) : 1;
+        const padding = 0.12 * (upper - lower || 1);
+        const recovery = analysisAxes(recoverySvg, 'Amplitude Fit', `Amplitude Recovered (${fit ? `${significant(fit.amplitude)} ${unit}` : '—'})`, 'Phase', `Velocity [${unit}]`, [0, 1], [lower - padding, upper + padding]);
+        svgElement('desc', { id: 'rv-recovery-description' }, recoverySvg, fit ? `Snapshot folded at ${peakPeriod.toFixed(1)} days, relative to its first observation. Sinusoid fitted to individual observations: semi-amplitude ${significant(fit.amplitude)} ${unit}. Means in 20 phase buckets, with sample standard errors where a bucket has at least two observations.` : 'No RV variation to fit.');
+        if (!fit) {
+            svgElement('text', { x: (recovery.left + recovery.right) / 2, y: (recovery.top + recovery.bottom) / 2, class: 'plot-text', 'text-anchor': 'middle', style: 'font-size:14px' }, recoverySvg, 'No RV variation to fit.');
+            return;
+        }
+        for (const [phase, velocity] of folded) svgElement('circle', { cx: recovery.x(phase), cy: recovery.y(velocity), r: 2.5, fill: '#888', opacity: 0.35 }, recoverySvg);
+        svgElement('path', { d: model.map(([phase, velocity], index) => `${index ? 'L' : 'M'}${recovery.x(phase).toFixed(2)},${recovery.y(velocity).toFixed(2)}`).join(' '), fill: 'none', stroke: '#e58a18', 'stroke-width': 2 }, recoverySvg);
+        for (const bin of bins) {
+            const x = recovery.x(bin.phase), y = recovery.y(bin.velocity);
+            if (bin.sem !== null) {
+                const top = recovery.y(bin.velocity + bin.sem), bottom = recovery.y(bin.velocity - bin.sem);
+                svgElement('path', { d: `M${x} ${top} V${bottom} M${x - 3} ${top} H${x + 3} M${x - 3} ${bottom} H${x + 3}`, fill: 'none', stroke: '#2ca02c', 'stroke-width': 1.4 }, recoverySvg);
+            }
+            svgElement('circle', { cx: x, cy: y, r: 4, fill: '#2ca02c' }, recoverySvg);
+        }
+    }
+    function setAnalysisView(visible) {
+        orbitSvg.parentElement.classList.toggle('analysis-active', visible);
+        analysisPanel.hidden = !visible;
+        showOrbit.setAttribute('aria-pressed', String(!visible));
+        showAnalysis.setAttribute('aria-pressed', String(visible));
+        if (visible) renderAnalysis();
+    }
+    function renderPlot() {
+        const width = Math.max(240, svg.clientWidth), compact = width < 450;
+        const height = Math.max(360, Math.min(520, width * 0.95));
+        const margin = { left: compact ? 62 : 76, right: 18, top: 22, bottom: 54 };
+        const plotWidth = width - margin.left - margin.right, plotHeight = height - margin.top - margin.bottom;
+        plotX = value => margin.left + value / series.duration * plotWidth;
+        plotY = value => margin.top + (series.upper - value) / (series.upper - series.lower) * plotHeight;
+        attributes(svg, { viewBox: `0 0 ${width} ${height}` });
+        attributes(clipRectangle, { x: margin.left, y: margin.top, width: plotWidth, height: plotHeight });
+        axes.replaceChildren();
+        const fontSize = compact ? 12 : 15;
+        const text = (label, values) => svgElement('text', { class: 'plot-text', style: `font-size:${fontSize}px`, ...values }, axes, label);
+        for (const value of ticks(0, series.duration, compact ? 3 : 6)) {
+            svgElement('line', { x1: plotX(value), x2: plotX(value), y1: margin.top, y2: height - margin.bottom, stroke: '#eee' }, axes);
+            text(significant(value), { x: plotX(value), y: height - margin.bottom + 20, 'text-anchor': 'middle' });
+        }
+        for (const value of ticks(series.lower, series.upper, compact ? 4 : 6)) {
+            svgElement('line', { x1: margin.left, x2: width - margin.right, y1: plotY(value), y2: plotY(value), stroke: value === 0 ? '#aaa' : '#eee' }, axes);
+            text(significant(value), { x: margin.left - 9, y: plotY(value) + 4, 'text-anchor': 'end' });
+        }
+        svgElement('rect', { x: margin.left, y: margin.top, width: plotWidth, height: plotHeight, fill: 'none', stroke: '#333' }, axes);
+        text('Time [days]', { x: margin.left + plotWidth / 2, y: height - 10, 'text-anchor': 'middle' });
+        text(`Stellar Radial Velocity [${series.unit}]`, { transform: `translate(${compact ? 14 : 19} ${margin.top + plotHeight / 2}) rotate(-90)`, 'text-anchor': 'middle' });
+        curve.setAttribute('d', series.model.map(([time, velocity], index) => `${index ? 'L' : 'M'}${plotX(time).toFixed(2)},${plotY(velocity).toFixed(2)}`).join(' '));
+        observations.replaceChildren();
+        for (const [time, velocity] of series.observations) {
+            if (series.noiseSigma > 0) svgElement('line', { x1: plotX(time), x2: plotX(time), y1: plotY(velocity - series.noiseSigma), y2: plotY(velocity + series.noiseSigma), 'stroke-width': 0.8 }, observations);
+            svgElement('circle', { cx: plotX(time), cy: plotY(velocity), r: compact ? 2 : 2.5, stroke: 'none' }, observations);
+        }
+        attributes(cursorLine, { y1: margin.top, y2: height - margin.bottom });
+        legend.replaceChildren();
+        const legendWidth = compact ? 120 : 146, legendX = width - margin.right - legendWidth - 6, legendY = margin.top + 6;
+        svgElement('rect', { x: legendX, y: legendY, width: legendWidth, height: 48, fill: '#fff', opacity: 0.92 }, legend);
+        svgElement('line', { x1: legendX + 10, x2: legendX + 30, y1: legendY + 14, y2: legendY + 14, stroke: '#2966a3', 'stroke-width': 2.5 }, legend);
+        svgElement('circle', { cx: legendX + 20, cy: legendY + 35, r: 3, fill: '#d8832f' }, legend);
+        svgElement('text', { x: legendX + 38, y: legendY + 18, class: 'plot-text', style: `font-size:${fontSize}px` }, legend, 'Model');
+        svgElement('text', { x: legendX + 38, y: legendY + 39, class: 'plot-text', style: `font-size:${fontSize}px` }, legend, 'Observations');
+        renderCurrent();
+    }
+
+    function renderCurrent() {
+        // calculations
+        const time = cursorTime, velocity = keplerianVelocity(time, state, series);
+        const anomaly = trueFromMean(TAU * state.phase, state.eccentricity);
+        const eccentricAnomaly = 2 * Math.atan2(Math.sqrt(1 - state.eccentricity) * Math.sin(anomaly / 2), Math.sqrt(1 + state.eccentricity) * Math.cos(anomaly / 2));
+        const current = projectedRVOrbit(eccentricAnomaly, state);
+        const starScale = 18 / (1 + state.eccentricity), companionScale = -135 / (1 + state.eccentricity);
+        const starX = 240 + starScale * current.x, starY = 188 - starScale * current.z;
+        const companionX = 240 + companionScale * current.x, companionY = 188 - companionScale * current.z;
+        const transit = Math.hypot(current.x, current.skyY) < 1e-9 && current.z > 0;
+        const neutralPhase = Math.abs(state.phase * 2 - Math.round(state.phase * 2)) < 1e-10;
+        const direction = neutralPhase ? 'No direction yet!' : velocity > 0 ? 'Receding from Earth' : velocity < 0 ? 'Approaching Earth' : '—';
+        const motion = transit ? 'Transit alignment' : velocity === 0 ? 'No instantaneous radial motion' : direction;
+        const signedVelocity = `${velocity > 0 ? '+' : ''}${significant(velocity)} ${series.unit}`;
+
+        // plotting
+        attributes(cursorLine, { x1: plotX(time), x2: plotX(time) });
+        attributes(cursor, { transform: `translate(${plotX(time)} ${plotY(velocity)})` });
+        for (const element of [star, glowInner, glowOuter]) attributes(element, { cx: starX, cy: starY });
+        attributes(companion, { cx: companionX, cy: companionY });
+        const screenScale = orbitSvg.getScreenCTM()?.a || 1;
+        attributes(hit, { cx: companionX, cy: companionY, r: Math.max(12, 22 / screenScale), 'aria-valuenow': state.phase, 'aria-valuetext': state.phase.toFixed(2) });
+        document.getElementById('rv-current-velocity').textContent = signedVelocity;
+        document.getElementById('rv-current-phase').textContent = state.phase.toFixed(2);
+        document.getElementById('rv-motion').textContent = direction;
+        document.getElementById('rv-svg-description').textContent = `Stellar radial velocity over ${series.duration} days, in ${series.unit}. Semi-amplitude ${significant(series.amplitude)} ${series.unit}. The red star is at ${time.toFixed(2)} days and ${signedVelocity}. Blue is the model; orange points are simulated observations with ${state.noiseType === 'None' ? 'no noise' : 'Gaussian noise and one-sigma error bars'}.`;
+        document.getElementById('rv-orbit-description').textContent = `Bird’s-eye orbit view at phase ${state.phase.toFixed(2)}. ${motion}. Earth is below the system; the cross marks the barycenter. Body sizes, stellar wobble, and Earth’s distance are schematic.`;
+    }
+    function render(resetTime = false) {
+        series = radialVelocitySeries(state);
+        if (resetTime) cursorTime = state.phase * state.period;
+        document.getElementById('rv-amplitude').textContent = `${significant(series.amplitude)} ${series.unit}`;
+        const orbitPoints = Array.from({ length: 361 }, (_, index) => projectedRVOrbit(TAU * index / 360, state));
+        for (const [path, scale] of [[starOrbit, 18 / (1 + state.eccentricity)], [companionOrbit, -135 / (1 + state.eccentricity)]]) {
+            path.setAttribute('d', orbitPoints.map((point, index) => `${index ? 'L' : 'M'}${(240 + scale * point.x).toFixed(2)},${(188 - scale * point.z).toFixed(2)}`).join(' '));
+        }
+        renderPlot();
+    }
+    function moveCursor(time) {
+        // Remove accumulated drag roundoff so an exact endpoint wraps to zero.
+        cursorTime = Number((((time % series.duration) + series.duration) % series.duration).toFixed(10)) % series.duration;
+        state.phase = (cursorTime / state.period) % 1;
+        controls.phase.setValue(state.phase);
+        renderCurrent();
+    }
+    function pause() {
+        playing = false;
+        if (frame !== null) cancelAnimationFrame(frame);
+        frame = null;
+        lastTime = null;
+        play.textContent = 'Play orbit';
+        play.setAttribute('aria-pressed', 'false');
+    }
+    function animate(timestamp) {
+        if (!playing) return;
+        // One illustrative orbit takes 12 seconds; the marker traverses the full time window.
+        moveCursor(cursorTime + (lastTime === null ? 0 : timestamp - lastTime) / 12000 * state.period);
+        lastTime = timestamp;
+        frame = requestAnimationFrame(animate);
+    }
+    massUnit.addEventListener('change', () => {
+        pause();
+        state.massUnit = massUnit.value;
+        state.companionMass = 1;
+        state.sigma = state.massUnit === 'Jupiter' ? 5 : 1;
+        buildControls();
+        render();
+    });
+    timeWindow.addEventListener('change', () => { pause(); state.timeWindow = timeWindow.value; render(true); });
+    noiseType.addEventListener('change', () => {
+        pause();
+        state.noiseType = noiseType.value;
+        controls.sigma.slider.disabled = controls.sigma.number.disabled = state.noiseType === 'None';
+        render();
+    });
+    document.getElementById('rv-reset').addEventListener('click', () => {
+        pause();
+        state = { ...defaults };
+        syncSelections();
+        buildControls();
+        render(true);
+        analysis = null;
+        setAnalysisView(false);
+    });
+    showOrbit.addEventListener('click', () => setAnalysisView(false));
+    showAnalysis.addEventListener('click', () => {
+        pause();
+        analysis = radialVelocityAnalysis(series.observations, state.period, series.unit);
+        setAnalysisView(true);
+    });
+    play.addEventListener('click', () => {
+        if (playing) return pause();
+        setAnalysisView(false);
+        playing = true;
+        play.textContent = 'Pause orbit';
+        play.setAttribute('aria-pressed', 'true');
+        frame = requestAnimationFrame(animate);
+    });
+    hit.addEventListener('pointerdown', event => {
+        if (!event.isPrimary || event.button !== 0) return;
+        event.preventDefault();
+        pause();
+        pointer = event.pointerId;
+        dragPhase = state.phase % 1;
+        hit.setPointerCapture(pointer);
+        hit.classList.add('dragging');
+        hit.focus({ preventScroll: true });
+    });
+    hit.addEventListener('pointermove', event => {
+        if (event.pointerId !== pointer) return;
+        const point = svgPoint(orbitSvg, event), scale = -135 / (1 + state.eccentricity);
+        const nextPhase = snap(rvPhaseFromPoint((point.x - 240) / scale, (188 - point.y) / scale, state), 0, 1, 0.01) % 1;
+        const change = nextPhase - dragPhase;
+        // Unwrap the phase crossing so dragging continues along the full plotted time range.
+        moveCursor(cursorTime + (change - Math.round(change)) * state.period);
+        dragPhase = nextPhase;
+    });
+    function release(event) {
+        if (event.pointerId !== pointer) return;
+        pointer = null;
+        hit.classList.remove('dragging');
+        if (hit.hasPointerCapture(event.pointerId)) hit.releasePointerCapture(event.pointerId);
+    }
+    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) hit.addEventListener(name, release);
+    hit.addEventListener('keydown', event => {
+        const directions = { ArrowRight: 0.01, ArrowUp: 0.01, ArrowLeft: -0.01, ArrowDown: -0.01, PageUp: 0.1, PageDown: -0.1 };
+        if (!(event.key in directions) && event.key !== 'Home' && event.key !== 'End') return;
+        event.preventDefault();
+        pause();
+        const change = event.key === 'Home' ? -state.phase : event.key === 'End' ? 1 - state.phase : directions[event.key];
+        moveCursor(cursorTime + change * state.period);
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+    matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => { if (event.matches) pause(); });
+    // Keep browser-restored selections consistent with the active physical model.
+    window.addEventListener('pageshow', syncSelections);
+    buildControls();
+    new ResizeObserver(renderPlot).observe(svg);
+    new ResizeObserver(renderCurrent).observe(orbitSvg);
+    new ResizeObserver(renderAnalysis).observe(analysisPanel);
     render();
 })();
 
