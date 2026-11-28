@@ -274,22 +274,30 @@ window.AstroVisuals = (() => {
         setValue(value);
         return { row, slider, number, setValue, label: row.querySelector('label') };
     }
-    function svgPoint(svg, event) {
-        return new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse());
+    function svgViewport(svg) {
+        const bounds = svg.getBoundingClientRect(), viewBox = svg.viewBox.baseVal;
+        // Both orbit SVGs use xMidYMid meet; include CSS zoom and any letterboxing.
+        const scale = Math.min(bounds.width / viewBox.width, bounds.height / viewBox.height) || 1;
+        return { scale, x: bounds.left + (bounds.width - viewBox.width * scale) / 2 - viewBox.x * scale,
+            y: bounds.top + (bounds.height - viewBox.height * scale) / 2 - viewBox.y * scale };
     }
-    return { attributes, svgElement, control, svgPoint };
+    function svgPoint(svg, event) {
+        const viewport = svgViewport(svg);
+        return { x: (event.clientX - viewport.x) / viewport.scale, y: (event.clientY - viewport.y) / viewport.scale };
+    }
+    return { attributes, svgElement, control, svgViewport, svgPoint };
 })();
 
 // Planet equilibrium temperature: drawing, dragging, and playback
-(() => {
+(function initEquilibriumTemperature() {
     const { TAU, snap, rgb, significant, planetSystem, meanFromTrue, trueFromMean } = AstroPhysics;
-    const { attributes, svgElement, control, svgPoint } = AstroVisuals;
+    const { attributes, svgElement, control, svgViewport, svgPoint } = AstroVisuals;
     const defaults = { radius: 0.3, temperature: 3150, albedo: 0, distance: 0.02, eccentricity: 0.4, anomaly: 0 };
     let state = { ...defaults };
     const svg = document.getElementById('planet-diagram');
     const result = document.getElementById('planet-result'), status = document.getElementById('planet-status');
     const play = document.getElementById('planet-play');
-    let playing = false, frame = null, lastTime = null, meanAnomaly = 0, pointer = null;
+    let playing = false, frame = null, lastTime = null, meanAnomaly = 0, equilibriumPointer = null;
     const wholeKelvin = value => value.toLocaleString('en-US', { maximumFractionDigits: 0 });
     const options = [
         { name: 'radius', label: 'Stellar radius [R☉]', min: 0.2, max: 3, step: 0.02, format: value => value.toFixed(2) },
@@ -344,7 +352,7 @@ window.AstroVisuals = (() => {
         for (const [label, position] of [[perihelionLabel, system.orbitCenter - system.orbitA], [aphelionLabel, system.orbitCenter + system.orbitA]]) {
             attributes(label, { x: x(position), y: y(-0.22) + 15, visibility: state.eccentricity === 0 ? 'hidden' : 'visible' });
         }
-        const screenScale = svg.getScreenCTM()?.a || 1;
+        const screenScale = svgViewport(svg).scale;
         attributes(hit, { cx: x(system.planetX), cy: y(system.planetY), r: Math.max(12, 22 / screenScale), 'aria-valuenow': state.anomaly, 'aria-valuetext': `${state.anomaly.toFixed(2)} radians` });
         result.textContent = `Equilibrium temperature: ${wholeKelvin(system.equilibrium)} K`;
         document.getElementById('planet-current-distance').textContent = `${significant(system.separation)} AU`;
@@ -376,6 +384,7 @@ window.AstroVisuals = (() => {
         frame = requestAnimationFrame(animate);
     }
     document.getElementById('planet-reset').addEventListener('click', () => {
+        endEquilibriumDrag();
         pause();
         state = { ...defaults };
         for (const option of options) controls[option.name].setValue(state[option.name]);
@@ -389,49 +398,57 @@ window.AstroVisuals = (() => {
         play.setAttribute('aria-pressed', 'true');
         frame = requestAnimationFrame(animate);
     });
-    hit.addEventListener('pointerdown', event => {
+    function startEquilibriumDrag(event) {
         if (!event.isPrimary || event.button !== 0) return;
         event.preventDefault();
+        endEquilibriumDrag();
         pause();
-        pointer = event.pointerId;
-        hit.setPointerCapture(pointer);
+        equilibriumPointer = event.pointerId;
+        hit.setPointerCapture(equilibriumPointer);
         hit.classList.add('dragging');
         hit.focus({ preventScroll: true });
-    });
-    hit.addEventListener('pointermove', event => {
-        if (event.pointerId !== pointer) return;
+    }
+    function moveEquilibriumDrag(event) {
+        if (event.pointerId !== equilibriumPointer) return;
+        if (!(event.buttons & 1)) return endEquilibriumDrag(event);
         const point = svgPoint(svg, event);
         const dx = 1.8 - (point.x / 100 - 1), dy = 2.5 - point.y / 100;
         if (Math.hypot(dx, dy) < 1e-8) return;
         state.anomaly = snap((Math.atan2(dy, dx) + TAU) % TAU, 0, TAU, 0.05);
         controls.anomaly.setValue(state.anomaly);
         render();
-    });
-    function release(event) {
-        if (event.pointerId !== pointer) return;
-        pointer = null;
-        hit.classList.remove('dragging');
-        if (hit.hasPointerCapture(event.pointerId)) hit.releasePointerCapture(event.pointerId);
     }
-    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) hit.addEventListener(name, release);
+    function endEquilibriumDrag(event) {
+        if (equilibriumPointer === null || (event?.pointerId !== undefined && event.pointerId !== equilibriumPointer)) return;
+        const pointerId = equilibriumPointer;
+        equilibriumPointer = null;
+        hit.classList.remove('dragging');
+        if (hit.hasPointerCapture(pointerId)) hit.releasePointerCapture(pointerId);
+    }
+    hit.addEventListener('pointerdown', startEquilibriumDrag);
+    hit.addEventListener('pointermove', moveEquilibriumDrag);
+    hit.addEventListener('lostpointercapture', event => { if (!hit.hasPointerCapture(event.pointerId)) endEquilibriumDrag(event); });
+    for (const name of ['pointerup', 'pointercancel']) window.addEventListener(name, endEquilibriumDrag);
+    window.addEventListener('blur', endEquilibriumDrag);
     hit.addEventListener('keydown', event => {
         if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
         controls.anomaly.slider.dispatchEvent(new KeyboardEvent('keydown', { key: event.key }));
     });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { endEquilibriumDrag(); pause(); } });
     matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => { if (event.matches) pause(); });
     new ResizeObserver(render).observe(svg);
     render();
 })();
 
 // Keplerian radial velocity: drawing, dragging, and playback
-(() => {
+(function initRadialVelocity() {
     const { TAU, snap, significant, trueFromMean, radialVelocitySeries, radialVelocityAnalysis, keplerianVelocity, projectedRVOrbit, rvPhaseFromPoint } = AstroPhysics;
-    const { attributes, svgElement, control, svgPoint } = AstroVisuals;
+    const { attributes, svgElement, control, svgViewport, svgPoint } = AstroVisuals;
     const defaults = { starMass: 1, companionMass: 10, massUnit: 'Earth', period: 30, eccentricity: 0, inclination: 90, omega: 270, phase: 0.5, timeWindow: '2 cycles', noiseType: 'Gaussian', sigma: 1, points: 100, seed: 1 };
     let state = { ...defaults }, series, plotX, plotY, analysis = null;
-    let playing = false, frame = null, lastTime = null, pointer = null, dragPhase = 0, cursorTime = defaults.phase * defaults.period;
+    let playing = false, frame = null, lastTime = null, cursorTime = defaults.phase * defaults.period;
+    let rvDrag = null;
     const controls = {};
     const svg = document.getElementById('rv-diagram'), orbitSvg = document.getElementById('rv-orbit');
     const massUnit = document.getElementById('rv-mass-unit'), timeWindow = document.getElementById('rv-time-window'), noiseType = document.getElementById('rv-noise-type');
@@ -479,7 +496,8 @@ window.AstroVisuals = (() => {
     svgElement('line', { x1: 240, y1: 382, x2: 240, y2: 346, stroke: '#b6dce7', 'stroke-width': 1.4, 'marker-end': 'url(#rv-sight-arrow)' }, orbitSvg);
     svgElement('text', { x: 261, y: 367, class: 'plot-text', style: 'fill:#b6dce7' }, orbitSvg, 'Line of sight');
     svgElement('text', { x: 264, y: 409, class: 'plot-text' }, orbitSvg, 'Earth');
-    const hit = svgElement('circle', { class: 'planet-hit', id: 'rv-planet-drag', tabindex: 0, role: 'slider', 'aria-label': 'Planet position: orbital phase', 'aria-valuemin': 0, 'aria-valuemax': 1, 'aria-describedby': 'rv-orbit-description' }, orbitSvg);
+    const planetHit = svgElement('circle', { class: 'planet-hit', id: 'rv-planet-drag', tabindex: 0, role: 'slider', 'aria-label': 'Planet position: orbital phase', 'aria-valuemin': 0, 'aria-valuemax': 1, 'aria-describedby': 'rv-orbit-description' }, orbitSvg);
+    const starHit = svgElement('circle', { class: 'planet-hit', id: 'rv-star-drag', tabindex: 0, role: 'slider', 'aria-label': 'Star position: orbital phase', 'aria-valuemin': 0, 'aria-valuemax': 1, 'aria-describedby': 'rv-orbit-description' }, orbitSvg);
 
     function syncSelections() {
         massUnit.value = state.massUnit;
@@ -489,8 +507,8 @@ window.AstroVisuals = (() => {
     function buildControls() {
         const jupiter = state.massUnit === 'Jupiter';
         const options = [
+            { name: 'companionMass', label: `Planet mass [${jupiter ? 'M_Jup' : 'M⊕'}]`, min: jupiter ? 0.5 : 1, max: jupiter ? 80 : 200, step: jupiter ? 0.5 : 1, integer: !jupiter },
             { name: 'starMass', label: 'Stellar mass [M☉]', min: 0.1, max: 3, step: 0.05, format: value => value.toFixed(2) },
-            { name: 'companionMass', label: `Companion mass [${jupiter ? 'M_Jup' : 'M⊕'}]`, min: jupiter ? 0.5 : 1, max: jupiter ? 80 : 200, step: jupiter ? 0.5 : 1, integer: !jupiter },
             { name: 'period', label: 'Period [days]', min: 1, max: 365, step: 1, integer: true },
             { name: 'eccentricity', label: 'Eccentricity e', min: 0, max: 0.75, step: 0.01, format: value => value.toFixed(2) },
             { name: 'inclination', label: 'Inclination i [°]', min: 0, max: 180, step: 1, integer: true },
@@ -511,7 +529,7 @@ window.AstroVisuals = (() => {
                 render(option.name === 'period');
             });
         }
-        if (jupiter) controls.companionMass.label.innerHTML = 'Companion mass [M<sub>Jup</sub>]';
+        if (jupiter) controls.companionMass.label.innerHTML = 'Planet mass [M<sub>Jup</sub>]';
         controls.sigma.slider.disabled = controls.sigma.number.disabled = state.noiseType === 'None';
     }
 
@@ -649,13 +667,15 @@ window.AstroVisuals = (() => {
         attributes(cursor, { transform: `translate(${plotX(time)} ${plotY(velocity)})` });
         for (const element of [star, glowInner, glowOuter]) attributes(element, { cx: starX, cy: starY });
         attributes(companion, { cx: companionX, cy: companionY });
-        const screenScale = orbitSvg.getScreenCTM()?.a || 1;
-        attributes(hit, { cx: companionX, cy: companionY, r: Math.max(12, 22 / screenScale), 'aria-valuenow': state.phase, 'aria-valuetext': state.phase.toFixed(2) });
+        const screenScale = svgViewport(orbitSvg).scale;
+        for (const [hit, x, y] of [[planetHit, companionX, companionY], [starHit, starX, starY]]) {
+            attributes(hit, { cx: x, cy: y, r: Math.max(12, 22 / screenScale), 'aria-valuenow': state.phase, 'aria-valuetext': state.phase.toFixed(2) });
+        }
         document.getElementById('rv-current-velocity').textContent = signedVelocity;
         document.getElementById('rv-current-phase').textContent = state.phase.toFixed(2);
         document.getElementById('rv-motion').textContent = direction;
         document.getElementById('rv-svg-description').textContent = `Stellar radial velocity over ${series.duration} days, in ${series.unit}. Semi-amplitude ${significant(series.amplitude)} ${series.unit}. The red star is at ${time.toFixed(2)} days and ${signedVelocity}. Blue is the model; orange points are simulated observations with ${state.noiseType === 'None' ? 'no noise' : 'Gaussian noise and one-sigma error bars'}.`;
-        document.getElementById('rv-orbit-description').textContent = `Bird’s-eye orbit view at phase ${state.phase.toFixed(2)}. ${motion}. Earth is below the system; the cross marks the barycenter. Body sizes, stellar wobble, and Earth’s distance are schematic.`;
+        document.getElementById('rv-orbit-description').textContent = `Bird’s-eye orbit view at phase ${state.phase.toFixed(2)}. ${motion}. Earth is below the system; the cross marks the barycenter. Drag either the star or planet to change orbital phase. Body sizes, stellar wobble, and Earth’s distance are schematic.`;
     }
     function render(resetTime = false) {
         series = radialVelocitySeries(state);
@@ -705,6 +725,7 @@ window.AstroVisuals = (() => {
         render();
     });
     document.getElementById('rv-reset').addEventListener('click', () => {
+        endRVDrag();
         pause();
         state = { ...defaults };
         syncSelections();
@@ -727,41 +748,55 @@ window.AstroVisuals = (() => {
         play.setAttribute('aria-pressed', 'true');
         frame = requestAnimationFrame(animate);
     });
-    hit.addEventListener('pointerdown', event => {
+    function startRVDrag(event) {
         if (!event.isPrimary || event.button !== 0) return;
         event.preventDefault();
+        endRVDrag();
         pause();
-        pointer = event.pointerId;
-        dragPhase = state.phase % 1;
-        hit.setPointerCapture(pointer);
+        const point = svgPoint(orbitSvg, event);
+        const distance = target => Math.hypot(point.x - Number(target.getAttribute('cx')), point.y - Number(target.getAttribute('cy')));
+        const hit = distance(planetHit) <= distance(starHit) ? planetHit : starHit;
+        rvDrag = { pointerId: event.pointerId, hit, orbitScale: hit === planetHit ? -135 : 18, phase: state.phase % 1,
+            offsetX: Number(hit.getAttribute('cx')) - point.x, offsetY: Number(hit.getAttribute('cy')) - point.y };
+        // Capture on the orbit panel so switching bodies never transfers capture between handles.
+        orbitSvg.setPointerCapture(event.pointerId);
         hit.classList.add('dragging');
         hit.focus({ preventScroll: true });
-    });
-    hit.addEventListener('pointermove', event => {
-        if (event.pointerId !== pointer) return;
-        const point = svgPoint(orbitSvg, event), scale = -135 / (1 + state.eccentricity);
-        const nextPhase = snap(rvPhaseFromPoint((point.x - 240) / scale, (188 - point.y) / scale, state), 0, 1, 0.01) % 1;
-        const change = nextPhase - dragPhase;
+    }
+    function moveRVDrag(event) {
+        if (!rvDrag || event.pointerId !== rvDrag.pointerId) return;
+        if (!(event.buttons & 1)) return endRVDrag(event);
+        const point = svgPoint(orbitSvg, event), scale = rvDrag.orbitScale / (1 + state.eccentricity);
+        const nextPhase = snap(rvPhaseFromPoint((point.x + rvDrag.offsetX - 240) / scale, (188 - point.y - rvDrag.offsetY) / scale, state), 0, 1, 0.01) % 1;
+        const change = nextPhase - rvDrag.phase;
         // Unwrap the phase crossing so dragging continues along the full plotted time range.
         moveCursor(cursorTime + (change - Math.round(change)) * state.period);
-        dragPhase = nextPhase;
-    });
-    function release(event) {
-        if (event.pointerId !== pointer) return;
-        pointer = null;
-        hit.classList.remove('dragging');
-        if (hit.hasPointerCapture(event.pointerId)) hit.releasePointerCapture(event.pointerId);
+        rvDrag.phase = nextPhase;
     }
-    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) hit.addEventListener(name, release);
-    hit.addEventListener('keydown', event => {
-        const directions = { ArrowRight: 0.01, ArrowUp: 0.01, ArrowLeft: -0.01, ArrowDown: -0.01, PageUp: 0.1, PageDown: -0.1 };
-        if (!(event.key in directions) && event.key !== 'Home' && event.key !== 'End') return;
-        event.preventDefault();
-        pause();
-        const change = event.key === 'Home' ? -state.phase : event.key === 'End' ? 1 - state.phase : directions[event.key];
-        moveCursor(cursorTime + change * state.period);
-    });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+    function endRVDrag(event) {
+        if (!rvDrag || (event?.pointerId !== undefined && event.pointerId !== rvDrag.pointerId)) return;
+        const { pointerId, hit } = rvDrag;
+        rvDrag = null;
+        hit.classList.remove('dragging');
+        if (orbitSvg.hasPointerCapture(pointerId)) orbitSvg.releasePointerCapture(pointerId);
+    }
+    orbitSvg.addEventListener('pointermove', moveRVDrag);
+    orbitSvg.addEventListener('lostpointercapture', event => { if (!orbitSvg.hasPointerCapture(event.pointerId)) endRVDrag(event); });
+    for (const name of ['pointerup', 'pointercancel']) window.addEventListener(name, endRVDrag);
+    window.addEventListener('blur', endRVDrag);
+    for (const hit of [planetHit, starHit]) {
+        hit.addEventListener('pointerdown', startRVDrag);
+        hit.addEventListener('keydown', event => {
+            const directions = { ArrowRight: 0.01, ArrowUp: 0.01, ArrowLeft: -0.01, ArrowDown: -0.01, PageUp: 0.1, PageDown: -0.1 };
+            if (!(event.key in directions) && event.key !== 'Home' && event.key !== 'End') return;
+            event.preventDefault();
+            endRVDrag();
+            pause();
+            const change = event.key === 'Home' ? -state.phase : event.key === 'End' ? 1 - state.phase : directions[event.key];
+            moveCursor(cursorTime + change * state.period);
+        });
+    }
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { endRVDrag(); pause(); } });
     matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', event => { if (event.matches) pause(); });
     // Keep browser-restored selections consistent with the active physical model.
     window.addEventListener('pageshow', syncSelections);
